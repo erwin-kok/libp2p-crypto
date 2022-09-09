@@ -87,12 +87,12 @@ To marshal a privateKey, do:
 ```kotlin
 val privBytes = CryptoUtil.marshalPrivateKey(privateKey)
     .onFailure {
-        // Could not verify message
+        // Could not marshal private key
     }
 // Use privBytes (a ByteArray) to store the privateKey
 val privateKey2 = CryptoUtil.unmarshalPrivateKey(privBytes)
     .onFailure {
-        // Could not verify message
+        // Could not unmarshal private key
     }
 // Here `privateKey` and `privateKey2` should be equal
 ```
@@ -101,12 +101,12 @@ Likewise for a publicKey:
 ```kotlin
 val pubBytes = CryptoUtil.marshalPublicKey(publicKey)
     .onFailure {
-        // Could not verify message
+        // Could not marshal public key
     }
 // Use pubBytes (a ByteArray) to store or send the publicKey
 val publicKey2 = CryptoUtil.unmarshalPublicKey(pubBytes)
     .onFailure {
-        // Could not verify message
+        // Could not unmarshal public key
     }
 // Here `publicKey` and `publicKey2` should be equal
 ```
