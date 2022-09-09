@@ -1,0 +1,31 @@
+[versions]
+kotlin-logging = "2.1.23"
+junit-jupiter = "5.9.0"
+kerby-asn1 = "2.0.2"
+klaxon = "5.6"
+protobuf = "3.21.5"
+
+kotlin = "1.7.10"
+kover-plugin = "0.6.0"
+ktlint-plugin = "10.3.0"
+nexus-plugin = "1.1.0"
+
+result-monad = "0.2.0-SNAPSHOT"
+
+[libraries]
+kotlin-logging = { module = "io.github.microutils:kotlin-logging-jvm", version.ref = "kotlin-logging" }
+junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit-jupiter" }
+junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit-jupiter" }
+junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-jupiter" }
+kerby-asn1 = { module = "org.apache.kerby:kerby-asn1", version.ref = "kerby-asn1" }
+klaxon = { module = "com.beust:klaxon", version.ref = "klaxon" }
+protobuf-java = { module = "com.google.protobuf:protobuf-java", version.ref = "protobuf" }
+protoc = { module = "com.google.protobuf:protoc", version.ref = "protobuf" }
+
+result-monad = { module = "org.erwinkok.result:result-monad", version.ref = "result-monad" }
+
+[plugins]
+build-kotlin = { id = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+build-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover-plugin" }
+build-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-plugin" }
+build-nexus = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexus-plugin" }
