@@ -1,3 +1,4 @@
+// Copyright (c) 2022 Erwin Kok. BSD-3-Clause license. See LICENSE file for more details.
 package org.erwinkok.libp2p.crypto.secp256k1
 
 // nafScalar represents a positive integer up to a maximum value of 2^256 - 1
