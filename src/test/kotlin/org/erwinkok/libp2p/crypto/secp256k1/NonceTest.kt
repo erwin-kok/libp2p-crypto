@@ -1,8 +1,8 @@
 package org.erwinkok.libp2p.crypto.secp256k1
 
-import org.erwinkok.libp2p.crypto.util.Hex
-import org.erwinkok.libp2p.crypto.util.Tuple3
-import org.erwinkok.libp2p.crypto.util.Tuple7
+import org.erwinkok.util.Hex
+import org.erwinkok.util.Tuple3
+import org.erwinkok.util.Tuple7
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
@@ -153,11 +153,11 @@ internal class NonceTest {
             )
         ).map { (name: String, t_key: String, t_hash: String, t_extraData: String, t_version: String, iterations: Int, t_expected: String) ->
             DynamicTest.dynamicTest("Test: $name") {
-                val privKey = Hex.decode(t_key)
-                val hash = Hex.decode(t_hash)
-                val extraData = Hex.decode(t_extraData)
-                val version = Hex.decode(t_version)
-                val wantNonce = Hex.decode(t_expected)
+                val privKey = Hex.decodeOrThrow(t_key)
+                val hash = Hex.decodeOrThrow(t_hash)
+                val extraData = Hex.decodeOrThrow(t_extraData)
+                val version = Hex.decodeOrThrow(t_version)
+                val wantNonce = Hex.decodeOrThrow(t_expected)
 
                 // Ensure deterministically generated nonce is the expected value.
                 val gotNonce = Nonce.nonceRFC6979(privKey, hash, extraData, version, iterations)
@@ -204,13 +204,13 @@ internal class NonceTest {
             )
         ).map { (key: String, msg: String, nonce: String) ->
             DynamicTest.dynamicTest("Test: $msg") {
-                val privKey = Hex.decode(key)
+                val privKey = Hex.decodeOrThrow(key)
                 val hasher = MessageDigest.getInstance("SHA-256")
                 val hash = hasher.digest(msg.toByteArray())
 
                 // Ensure deterministically generated nonce is the expected value.
                 val gotNonce = Nonce.nonceRFC6979(privKey, hash, byteArrayOf(), byteArrayOf(), 0)
-                val wantNonce = Hex.decode(nonce)
+                val wantNonce = Hex.decodeOrThrow(nonce)
                 val gotNonceBytes = gotNonce.bytes()
                 assertArrayEquals(wantNonce, gotNonceBytes)
             }

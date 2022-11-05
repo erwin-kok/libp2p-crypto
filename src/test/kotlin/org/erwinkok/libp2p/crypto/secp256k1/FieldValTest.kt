@@ -1,11 +1,11 @@
 package org.erwinkok.libp2p.crypto.secp256k1
 
 import org.erwinkok.libp2p.crypto.math.BigInt
-import org.erwinkok.libp2p.crypto.util.Hex
-import org.erwinkok.libp2p.crypto.util.Tuple
-import org.erwinkok.libp2p.crypto.util.Tuple2
-import org.erwinkok.libp2p.crypto.util.Tuple3
-import org.erwinkok.libp2p.crypto.util.Tuple4
+import org.erwinkok.util.Hex
+import org.erwinkok.util.Tuple
+import org.erwinkok.util.Tuple2
+import org.erwinkok.util.Tuple3
+import org.erwinkok.util.Tuple4
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -173,7 +173,7 @@ internal class FieldValTest {
             )
         ).map { (name: String, input: String, exp: IntArray, overflow: Boolean) ->
             DynamicTest.dynamicTest("Test: $name") {
-                val inBytes = Hex.decode(input)
+                val inBytes = Hex.decodeOrThrow(input)
 
                 // Ensure setting the bytes via the slice method works as expected.
                 val f = FieldVal.setByteSlice(inBytes)
@@ -1058,7 +1058,7 @@ internal class FieldValTest {
             )
         ).map { (name: String, inp: String, expected: Boolean) ->
             DynamicTest.dynamicTest("Test: $name") {
-                val f = FieldVal.setByteSlice(Hex.decode(inp))
+                val f = FieldVal.setByteSlice(Hex.decodeOrThrow(inp))
                 assertEquals(expected, f.isGtOrEqPrimeMinusOrder())
             }
         }.stream()

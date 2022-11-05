@@ -3,11 +3,11 @@ package org.erwinkok.libp2p.crypto.secp256k1
 import org.apache.kerby.asn1.type.Asn1Integer
 import org.apache.kerby.asn1.type.Asn1Sequence
 import org.erwinkok.libp2p.crypto.math.BigInt
-import org.erwinkok.libp2p.crypto.util.Tuple
-import org.erwinkok.libp2p.crypto.util.Tuple2
 import org.erwinkok.result.Err
 import org.erwinkok.result.Ok
 import org.erwinkok.result.Result
+import org.erwinkok.util.Tuple
+import org.erwinkok.util.Tuple2
 import kotlin.experimental.and
 import kotlin.math.max
 import kotlin.math.min

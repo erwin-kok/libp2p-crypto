@@ -2,12 +2,12 @@ package org.erwinkok.libp2p.crypto.secp256k1
 
 import org.erwinkok.libp2p.crypto.ecdsa.CurvePoint
 import org.erwinkok.libp2p.crypto.math.BigInt
-import org.erwinkok.libp2p.crypto.util.Hex
-import org.erwinkok.libp2p.crypto.util.Tuple3
-import org.erwinkok.libp2p.crypto.util.Tuple4
-import org.erwinkok.libp2p.crypto.util.Tuple5
-import org.erwinkok.libp2p.crypto.util.Tuple6
 import org.erwinkok.result.expectNoErrors
+import org.erwinkok.util.Hex
+import org.erwinkok.util.Tuple3
+import org.erwinkok.util.Tuple4
+import org.erwinkok.util.Tuple5
+import org.erwinkok.util.Tuple6
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue

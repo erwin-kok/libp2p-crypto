@@ -5,11 +5,11 @@ import org.erwinkok.libp2p.crypto.secp256k1.Secp256k1PublicKey.Companion.PubKeyF
 import org.erwinkok.libp2p.crypto.secp256k1.Secp256k1PublicKey.Companion.PubKeyFormatCompressedOdd
 import org.erwinkok.libp2p.crypto.secp256k1.Secp256k1PublicKey.Companion.PubKeyFormatHybridEven
 import org.erwinkok.libp2p.crypto.secp256k1.Secp256k1PublicKey.Companion.PubKeyFormatUncompressed
-import org.erwinkok.libp2p.crypto.util.Hex
-import org.erwinkok.libp2p.crypto.util.Tuple4
-import org.erwinkok.libp2p.crypto.util.Tuple5
 import org.erwinkok.result.assertErrorResult
 import org.erwinkok.result.expectNoErrors
+import org.erwinkok.util.Hex
+import org.erwinkok.util.Tuple4
+import org.erwinkok.util.Tuple5
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
@@ -283,7 +283,7 @@ class Secp256k1PublicKeyTest {
             )
         ).map { (name: String, key: String, error: String?, wantX: String, wantY: String) ->
             DynamicTest.dynamicTest("Test: $name") {
-                val pubKeyBytes = Hex.decode(key)
+                val pubKeyBytes = Hex.decodeOrThrow(key)
                 if (error != null) {
                     assertErrorResult(error) { Secp256k1PublicKey.parsePubKey(pubKeyBytes) }
                 } else {
@@ -388,7 +388,7 @@ class Secp256k1PublicKeyTest {
                 } else {
                     pubKey.serializeUncompressed()
                 }
-                assertArrayEquals(Hex.decode(expected), serialize)
+                assertArrayEquals(Hex.decodeOrThrow(expected), serialize)
             }
         }.stream()
     }
@@ -426,7 +426,7 @@ class Secp256k1PublicKeyTest {
             )
         ).map { (name: String, t_pubKey: String, t_wantX: String, t_wantY: String) ->
             DynamicTest.dynamicTest("Test: $name") {
-                val pubKeyBytes = Hex.decode(t_pubKey)
+                val pubKeyBytes = Hex.decodeOrThrow(t_pubKey)
                 val wantX = FieldVal.fromHex(t_wantX)
                 val wantY = FieldVal.fromHex(t_wantY)
                 val pubKey = Secp256k1PublicKey.parsePubKey(pubKeyBytes).expectNoErrors()
@@ -576,19 +576,22 @@ class Secp256k1PublicKeyTest {
             )
         ).map { (name: String, keys: String, format: Byte?, error: String?) ->
             DynamicTest.dynamicTest("Test: $name") {
-                val key = Hex.decode(keys)
+                val key = Hex.decodeOrThrow(keys)
                 if (error == null) {
                     val pub = Secp256k1PublicKey.parsePubKey(key).expectNoErrors()
                     val pubB = when (format) {
                         PubKeyFormatUncompressed -> {
                             pub.serializeUncompressed()
                         }
+
                         PubKeyFormatCompressedEven -> {
                             pub.serializeCompressed()
                         }
+
                         PubKeyFormatHybridEven -> {
                             key
                         }
+
                         else -> byteArrayOf()
                     }
                     assertArrayEquals(key, pubB)
@@ -604,8 +607,8 @@ class Secp256k1PublicKeyTest {
 
     @Test
     fun pubKeyIsEqual() {
-        val pubKey1 = Secp256k1PublicKey.parsePubKey(Hex.decode("032689c7c2dab13309fb143e0e8fe396342521887e976690b6b47f5b2a4b7d448e"))
-        val pubKey2 = Secp256k1PublicKey.parsePubKey(Hex.decode("02ce0b14fb842b1ba549fdd675c98075f12e9c510f8ef52bd021a9a1f4809d3b4d"))
+        val pubKey1 = Secp256k1PublicKey.parsePubKey(Hex.decodeOrThrow("032689c7c2dab13309fb143e0e8fe396342521887e976690b6b47f5b2a4b7d448e"))
+        val pubKey2 = Secp256k1PublicKey.parsePubKey(Hex.decodeOrThrow("02ce0b14fb842b1ba549fdd675c98075f12e9c510f8ef52bd021a9a1f4809d3b4d"))
         assertEquals(pubKey1, pubKey1)
         assertNotEquals(pubKey1, pubKey2)
     }

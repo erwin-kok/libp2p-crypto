@@ -1,9 +1,9 @@
 package org.erwinkok.libp2p.crypto.ed25519
 
 import org.erwinkok.libp2p.crypto.math.BigInt
-import org.erwinkok.libp2p.crypto.util.Hex
-import org.erwinkok.libp2p.crypto.util.Tuple2
-import org.erwinkok.libp2p.crypto.util.Tuple4
+import org.erwinkok.util.Hex
+import org.erwinkok.util.Tuple2
+import org.erwinkok.util.Tuple4
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -114,11 +114,11 @@ internal class ElementTest {
         return listOf(
             Tuple2(
                 Element(358744748052810L, 1691584618240980L, 977650209285361L, 1429865912637724L, 560044844278676L),
-                Hex.decode("4ad145c54646a1de38e2e513703c195cbb4ade38329933e9284a3906a0b9d51f")
+                Hex.decodeOrThrow("4ad145c54646a1de38e2e513703c195cbb4ade38329933e9284a3906a0b9d51f")
             ),
             Tuple2(
                 Element(84926274344903L, 473620666599931L, 365590438845504L, 1028470286882429L, 2146499180330972L),
-                Hex.decode("c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac037a")
+                Hex.decodeOrThrow("c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac037a")
             )
         ).map { (test_fe: Element, test_b: ByteArray) ->
             DynamicTest.dynamicTest("Test: $test_fe") {
@@ -262,9 +262,9 @@ internal class ElementTest {
             )
         ).map { (test_u: String, test_v: String, test_wasSquare: Boolean, test_r: String) ->
             DynamicTest.dynamicTest("Test: $test_u $test_v") {
-                val u = Element(Hex.decode(test_u))
-                val v = Element(Hex.decode(test_v))
-                val want = Element(Hex.decode(test_r))
+                val u = Element(Hex.decodeOrThrow(test_u))
+                val v = Element(Hex.decodeOrThrow(test_v))
+                val want = Element(Hex.decodeOrThrow(test_r))
                 val got = Element.sqrtRatio(u, v)
                 assertEquals(want, got.r)
                 assertEquals(test_wasSquare, got.isSquare)

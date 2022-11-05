@@ -3,11 +3,11 @@
 package org.erwinkok.libp2p.crypto.secp256k1
 
 import org.erwinkok.libp2p.crypto.math.BigInt
-import org.erwinkok.libp2p.crypto.util.Hex
-import org.erwinkok.libp2p.crypto.util.Tuple
-import org.erwinkok.libp2p.crypto.util.Tuple2
-import org.erwinkok.libp2p.crypto.util.Tuple3
-import org.erwinkok.libp2p.crypto.util.Tuple4
+import org.erwinkok.util.Hex
+import org.erwinkok.util.Tuple
+import org.erwinkok.util.Tuple2
+import org.erwinkok.util.Tuple3
+import org.erwinkok.util.Tuple4
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -60,7 +60,7 @@ internal class ModNScalarTest {
             Tuple3("alternating bits 2", "5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a", uintArrayOf(0x5a5a5a5au, 0x5a5a5a5au, 0x5a5a5a5au, 0x5a5a5a5au, 0x5a5a5a5au, 0x5a5a5a5au, 0x5a5a5a5au, 0x5a5a5a5au))
         ).map { (name: String, input: String, expected: UIntArray) ->
             DynamicTest.dynamicTest("Test: $name") {
-                val inBytes = Hex.decode(input)
+                val inBytes = Hex.decodeOrThrow(input)
                 val s = ModNScalar.setByteSlice(inBytes)
                 assertModNScalar(expected, s)
             }
@@ -86,7 +86,7 @@ internal class ModNScalarTest {
         ).map { (name: String, input: String, expected: String) ->
             DynamicTest.dynamicTest("Test: $name") {
                 val s = setHex(input)
-                val expectedBytes = Hex.decode(expected)
+                val expectedBytes = Hex.decodeOrThrow(expected)
                 assertArrayEquals(expectedBytes, s.bytes())
             }
         }.stream()
@@ -361,9 +361,9 @@ internal class ModNScalarTest {
 
     private fun setHex(hexString: String): ModNScalar {
         if (hexString.length % 2 != 0) {
-            return ModNScalar.setByteSlice(Hex.decode("0$hexString"))
+            return ModNScalar.setByteSlice(Hex.decodeOrThrow("0$hexString"))
         }
-        val bytes = Hex.decode(hexString)
+        val bytes = Hex.decodeOrThrow(hexString)
         return ModNScalar.setByteSlice(bytes)
     }
 

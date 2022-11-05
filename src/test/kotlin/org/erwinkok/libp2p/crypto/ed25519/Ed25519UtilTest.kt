@@ -4,9 +4,9 @@ import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import org.erwinkok.libp2p.crypto.CryptoUtil
-import org.erwinkok.libp2p.crypto.util.Hex
 import org.erwinkok.result.assertErrorResult
 import org.erwinkok.result.expectNoErrors
+import org.erwinkok.util.Hex
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -30,9 +30,9 @@ internal class Ed25519UtilTest {
         val gis = GZIPInputStream(input)
         val testVectors = Parser.default().parse(gis) as JsonArray<JsonObject>
         for (testVector in testVectors) {
-            val publicKey = Hex.decode(testVector["A"] as String)
-            val signatureR = Hex.decode(testVector["R"] as String)
-            val signatureS = Hex.decode(testVector["S"] as String)
+            val publicKey = Hex.decodeOrThrow(testVector["A"] as String)
+            val signatureR = Hex.decodeOrThrow(testVector["R"] as String)
+            val signatureS = Hex.decodeOrThrow(testVector["S"] as String)
             val message = testVector["M"] as String
             var expectedToVerify = true
             if (testVector.containsKey("Flags") && testVector["Flags"] != null) {
@@ -75,10 +75,10 @@ internal class Ed25519UtilTest {
             val line = scanner.nextLine()
             val parts = line.split(":").toTypedArray()
             require(parts.size >= 4) { "bad number of parts on line $lineNo" }
-            val privBytes = Hex.decode(parts[0])
-            val pubKey = Hex.decode(parts[1])
-            val msg = Hex.decode(parts[2])
-            var sig = Hex.decode(parts[3])
+            val privBytes = Hex.decodeOrThrow(parts[0])
+            val pubKey = Hex.decodeOrThrow(parts[1])
+            val msg = Hex.decodeOrThrow(parts[2])
+            var sig = Hex.decodeOrThrow(parts[3])
             // The signatures in the test vectors also include the message
             // at the end, but we just want R and S.
             sig = sig.copyOf(Ed25519.SIGNATURE_SIZE)
@@ -103,9 +103,9 @@ internal class Ed25519UtilTest {
         // https://tools.ietf.org/html/rfc8032#section-5.1.7 adds an additional test
         // that s be in [0, order). This prevents someone from adding a multiple of
         // order to s and obtaining a second valid signature for the same message.
-        val msg = Hex.decode("54657374")
-        val sig = Hex.decode("7c38e026f29e14aabd059a0f2db8b0cd783040609a8be684db12f82a27774ab067654bce3832c2d76f8f6f5dafc08d9339d4eef676573336a5c51eb6f946b31d")
-        val publicKey = Hex.decode("7d4d0e7f6153a69b6242b522abbee685fda4420f8834b108c3bdae369ef549fa")
+        val msg = Hex.decodeOrThrow("54657374")
+        val sig = Hex.decodeOrThrow("7c38e026f29e14aabd059a0f2db8b0cd783040609a8be684db12f82a27774ab067654bce3832c2d76f8f6f5dafc08d9339d4eef676573336a5c51eb6f946b31d")
+        val publicKey = Hex.decodeOrThrow("7d4d0e7f6153a69b6242b522abbee685fda4420f8834b108c3bdae369ef549fa")
         assertErrorResult("invalid scalar encoding") { Ed25519.verify(publicKey, msg, sig) }
     }
 

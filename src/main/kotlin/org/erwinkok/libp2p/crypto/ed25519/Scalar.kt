@@ -1,6 +1,6 @@
 package org.erwinkok.libp2p.crypto.ed25519
 
-import org.erwinkok.libp2p.crypto.util.Hex
+import org.erwinkok.util.Hex
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.experimental.and
@@ -181,7 +181,7 @@ class Scalar(src: ByteArray) {
     companion object {
         val Zero = Scalar(byteArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
         val One = Scalar(byteArrayOf(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
-        val MinusOne = Scalar(Hex.decode("ecd3f55c1a631258d69cf7a2def9de1400000000000000000000000000000010"))
+        val MinusOne = Scalar(Hex.decodeOrThrow("ecd3f55c1a631258d69cf7a2def9de1400000000000000000000000000000010"))
 
         // SetCanonicalBytes sets s = x, where x is a 32-byte little-endian encoding of
         // s, and returns s. If x is not a canonical encoding of s, SetCanonicalBytes

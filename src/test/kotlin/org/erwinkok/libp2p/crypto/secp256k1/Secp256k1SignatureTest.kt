@@ -1,9 +1,9 @@
 package org.erwinkok.libp2p.crypto.secp256k1
 
-import org.erwinkok.libp2p.crypto.util.Hex
-import org.erwinkok.libp2p.crypto.util.Tuple3
 import org.erwinkok.result.assertErrorResult
 import org.erwinkok.result.expectNoErrors
+import org.erwinkok.util.Hex
+import org.erwinkok.util.Tuple3
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
@@ -246,9 +246,9 @@ internal class Secp256k1SignatureTest {
         ).map { (name: String, sig: String, err: String?) ->
             DynamicTest.dynamicTest("Test: $name") {
                 if (err == null) {
-                    assertDoesNotThrow { Secp256k1Signature.parseDERSignature(Hex.decode(sig)) }
+                    assertDoesNotThrow { Secp256k1Signature.parseDERSignature(Hex.decodeOrThrow(sig)) }
                 } else {
-                    assertErrorResult(err) { Secp256k1Signature.parseDERSignature(Hex.decode(sig)) }
+                    assertErrorResult(err) { Secp256k1Signature.parseDERSignature(Hex.decodeOrThrow(sig)) }
                 }
             }
         }.stream()
@@ -262,20 +262,20 @@ internal class Secp256k1SignatureTest {
                 // 0437cd7f8525ceed2324359c2d0ba26006d92d85
                 "valid 1 - r and s most significant bits are zero",
                 Secp256k1Signature(
-                    ModNScalar.setByteSlice(Hex.decode("4e45e16932b8af514961a1d3a1a25fdf3f4f7732e9d624c6c61548ab5fb8cd41")),
-                    ModNScalar.setByteSlice(Hex.decode("181522ec8eca07de4860a4acdd12909d831cc56cbbac4622082221a8768d1d09"))
+                    ModNScalar.setByteSlice(Hex.decodeOrThrow("4e45e16932b8af514961a1d3a1a25fdf3f4f7732e9d624c6c61548ab5fb8cd41")),
+                    ModNScalar.setByteSlice(Hex.decodeOrThrow("181522ec8eca07de4860a4acdd12909d831cc56cbbac4622082221a8768d1d09"))
                 ),
-                Hex.decode("304402204e45e16932b8af514961a1d3a1a25fdf3f4f7732e9d624c6c61548ab5fb8cd410220181522ec8eca07de4860a4acdd12909d831cc56cbbac4622082221a8768d1d09")
+                Hex.decodeOrThrow("304402204e45e16932b8af514961a1d3a1a25fdf3f4f7732e9d624c6c61548ab5fb8cd410220181522ec8eca07de4860a4acdd12909d831cc56cbbac4622082221a8768d1d09")
             ),
             Tuple3(
                 // signature from bitcoin blockchain tx
                 // cb00f8a0573b18faa8c4f467b049f5d202bf1101d9ef2633bc611be70376a4b4
                 "valid 2 - r most significant bit is one",
                 Secp256k1Signature(
-                    ModNScalar.setByteSlice(Hex.decode("82235e21a2300022738dabb8e1bbd9d19cfb1e7ab8c30a23b0afbb8d178abcf3")),
-                    ModNScalar.setByteSlice(Hex.decode("24bf68e256c534ddfaf966bf908deb944305596f7bdcc38d69acad7f9c868724"))
+                    ModNScalar.setByteSlice(Hex.decodeOrThrow("82235e21a2300022738dabb8e1bbd9d19cfb1e7ab8c30a23b0afbb8d178abcf3")),
+                    ModNScalar.setByteSlice(Hex.decodeOrThrow("24bf68e256c534ddfaf966bf908deb944305596f7bdcc38d69acad7f9c868724"))
                 ),
-                Hex.decode("304502210082235e21a2300022738dabb8e1bbd9d19cfb1e7ab8c30a23b0afbb8d178abcf3022024bf68e256c534ddfaf966bf908deb944305596f7bdcc38d69acad7f9c868724")
+                Hex.decodeOrThrow("304502210082235e21a2300022738dabb8e1bbd9d19cfb1e7ab8c30a23b0afbb8d178abcf3022024bf68e256c534ddfaf966bf908deb944305596f7bdcc38d69acad7f9c868724")
             ),
             Tuple3(
                 // signature from bitcoin blockchain tx
@@ -286,18 +286,18 @@ internal class Secp256k1SignatureTest {
                 // modified to expect the equally valid low S signature variant.
                 "valid 3 - s most significant bit is one",
                 Secp256k1Signature(
-                    ModNScalar.setByteSlice(Hex.decode("1cadddc2838598fee7dc35a12b340c6bde8b389f7bfd19a1252a17c4b5ed2d71")),
-                    ModNScalar.setByteSlice(Hex.decode("c1a251bbecb14b058a8bd77f65de87e51c47e95904f4c0e9d52eddc21c1415ac"))
+                    ModNScalar.setByteSlice(Hex.decodeOrThrow("1cadddc2838598fee7dc35a12b340c6bde8b389f7bfd19a1252a17c4b5ed2d71")),
+                    ModNScalar.setByteSlice(Hex.decodeOrThrow("c1a251bbecb14b058a8bd77f65de87e51c47e95904f4c0e9d52eddc21c1415ac"))
                 ),
-                Hex.decode("304402201cadddc2838598fee7dc35a12b340c6bde8b389f7bfd19a1252a17c4b5ed2d7102203e5dae44134eb4fa757428809a2178199e66f38daa53df51eaa380cab4222b95")
+                Hex.decodeOrThrow("304402201cadddc2838598fee7dc35a12b340c6bde8b389f7bfd19a1252a17c4b5ed2d7102203e5dae44134eb4fa757428809a2178199e66f38daa53df51eaa380cab4222b95")
             ),
             Tuple3(
                 "valid 4 - s is bigger than half order",
                 Secp256k1Signature(
-                    ModNScalar.setByteSlice(Hex.decode("a196ed0e7ebcbe7b63fe1d8eecbdbde03a67ceba4fc8f6482bdcb9606a911404")),
-                    ModNScalar.setByteSlice(Hex.decode("971729c7fa944b465b35250c6570a2f31acbb14b13d1565fab7330dcb2b3dfb1"))
+                    ModNScalar.setByteSlice(Hex.decodeOrThrow("a196ed0e7ebcbe7b63fe1d8eecbdbde03a67ceba4fc8f6482bdcb9606a911404")),
+                    ModNScalar.setByteSlice(Hex.decodeOrThrow("971729c7fa944b465b35250c6570a2f31acbb14b13d1565fab7330dcb2b3dfb1"))
                 ),
-                Hex.decode("3045022100a196ed0e7ebcbe7b63fe1d8eecbdbde03a67ceba4fc8f6482bdcb9606a911404022068e8d638056bb4b9a4cadaf39a8f5d0b9fe32b9b9b7749dc145f2db01d826190")
+                Hex.decodeOrThrow("3045022100a196ed0e7ebcbe7b63fe1d8eecbdbde03a67ceba4fc8f6482bdcb9606a911404022068e8d638056bb4b9a4cadaf39a8f5d0b9fe32b9b9b7749dc145f2db01d826190")
             ),
             Tuple3(
                 "zero signature",
@@ -305,7 +305,7 @@ internal class Secp256k1SignatureTest {
                     ModNScalar.Zero,
                     ModNScalar.Zero
                 ),
-                Hex.decode("3006020100020100")
+                Hex.decodeOrThrow("3006020100020100")
             )
         ).map { (name: String, sig: Secp256k1Signature, expected: ByteArray) ->
             DynamicTest.dynamicTest("Test: $name") {
@@ -344,16 +344,16 @@ internal class Secp256k1SignatureTest {
     @Test
     fun isEqual() {
         val sig1 = Secp256k1Signature(
-            ModNScalar.setBytes(Hex.decode("82235e21a2300022738dabb8e1bbd9d19cfb1e7ab8c30a23b0afbb8d178abcf3")),
-            ModNScalar.setBytes(Hex.decode("24bf68e256c534ddfaf966bf908deb944305596f7bdcc38d69acad7f9c868724"))
+            ModNScalar.setBytes(Hex.decodeOrThrow("82235e21a2300022738dabb8e1bbd9d19cfb1e7ab8c30a23b0afbb8d178abcf3")),
+            ModNScalar.setBytes(Hex.decodeOrThrow("24bf68e256c534ddfaf966bf908deb944305596f7bdcc38d69acad7f9c868724"))
         )
         val sig1Copy = Secp256k1Signature(
-            ModNScalar.setBytes(Hex.decode("82235e21a2300022738dabb8e1bbd9d19cfb1e7ab8c30a23b0afbb8d178abcf3")),
-            ModNScalar.setBytes(Hex.decode("24bf68e256c534ddfaf966bf908deb944305596f7bdcc38d69acad7f9c868724"))
+            ModNScalar.setBytes(Hex.decodeOrThrow("82235e21a2300022738dabb8e1bbd9d19cfb1e7ab8c30a23b0afbb8d178abcf3")),
+            ModNScalar.setBytes(Hex.decodeOrThrow("24bf68e256c534ddfaf966bf908deb944305596f7bdcc38d69acad7f9c868724"))
         )
         val sig2 = Secp256k1Signature(
-            ModNScalar.setBytes(Hex.decode("4e45e16932b8af514961a1d3a1a25fdf3f4f7732e9d624c6c61548ab5fb8cd41")),
-            ModNScalar.setBytes(Hex.decode("181522ec8eca07de4860a4acdd12909d831cc56cbbac4622082221a8768d1d09"))
+            ModNScalar.setBytes(Hex.decodeOrThrow("4e45e16932b8af514961a1d3a1a25fdf3f4f7732e9d624c6c61548ab5fb8cd41")),
+            ModNScalar.setBytes(Hex.decodeOrThrow("181522ec8eca07de4860a4acdd12909d831cc56cbbac4622082221a8768d1d09"))
         )
         assertEquals(sig1, sig1)
         assertEquals(sig1, sig1Copy)

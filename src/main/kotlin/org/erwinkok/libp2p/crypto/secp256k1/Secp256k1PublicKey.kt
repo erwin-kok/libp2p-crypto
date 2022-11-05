@@ -98,26 +98,26 @@ class Secp256k1PublicKey(val key: Jacobian2dPoint) : PublicKey(Crypto.KeyType.Se
     companion object {
         // PubKeyBytesLenCompressed is the number of bytes of a serialized
         // compressed public key.
-        internal const val PubKeyBytesLenCompressed = 33
+        const val PubKeyBytesLenCompressed = 33
 
         // PubKeyBytesLenUncompressed is the number of bytes of a serialized
         // uncompressed public key.
-        internal const val PubKeyBytesLenUncompressed = 65
+        const val PubKeyBytesLenUncompressed = 65
 
         // PubKeyFormatCompressedEven is the identifier prefix byte for a public key
         // whose Y coordinate is even when serialized in the compressed format per
         // section 2.3.4 of [SEC1](https://secg.org/sec1-v2.pdf#subsubsection.2.3.4).
-        internal const val PubKeyFormatCompressedEven = 0x02.toByte()
+        const val PubKeyFormatCompressedEven = 0x02.toByte()
 
         // PubKeyFormatCompressedOdd is the identifier prefix byte for a public key
         // whose Y coordinate is odd when serialized in the compressed format per
         // section 2.3.4 of [SEC1](https://secg.org/sec1-v2.pdf#subsubsection.2.3.4).
-        internal const val PubKeyFormatCompressedOdd = 0x03.toByte()
+        const val PubKeyFormatCompressedOdd = 0x03.toByte()
 
         // PubKeyFormatUncompressed is the identifier prefix byte for a public key
         // when serialized according in the uncompressed format per section 2.3.3 of
         // [SEC1](https://secg.org/sec1-v2.pdf#subsubsection.2.3.3).
-        internal const val PubKeyFormatUncompressed = 0x04.toByte()
+        const val PubKeyFormatUncompressed = 0x04.toByte()
 
         // PubKeyFormatHybridEven is the identifier prefix byte for a public key
         // whose Y coordinate is even when serialized according to the hybrid format
@@ -126,7 +126,7 @@ class Secp256k1PublicKey(val key: Jacobian2dPoint) : PublicKey(Crypto.KeyType.Se
         // NOTE: This format makes little sense in practice an therefore this
         // package will not produce public keys serialized in this format.  However,
         // it will parse them since they exist in the wild.
-        internal const val PubKeyFormatHybridEven = 0x06.toByte()
+        const val PubKeyFormatHybridEven = 0x06.toByte()
 
         // PubKeyFormatHybridOdd is the identifier prefix byte for a public key
         // whose Y coordingate is odd when serialized according to the hybrid format
@@ -193,6 +193,7 @@ class Secp256k1PublicKey(val key: Jacobian2dPoint) : PublicKey(Crypto.KeyType.Se
                     }
                     return Ok(Secp256k1PublicKey(Jacobian2dPoint(x, y)))
                 }
+
                 PubKeyBytesLenCompressed -> {
                     // Reject unsupported public key formats for the given length.
                     val format = serialized[0]
@@ -220,6 +221,7 @@ class Secp256k1PublicKey(val key: Jacobian2dPoint) : PublicKey(Crypto.KeyType.Se
                     }
                     return Ok(Secp256k1PublicKey(Jacobian2dPoint(x, y.normalize())))
                 }
+
                 else -> return Err("malformed public key: invalid length: ${serialized.size}")
             }
         }

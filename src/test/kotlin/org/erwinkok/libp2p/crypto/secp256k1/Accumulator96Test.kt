@@ -1,6 +1,6 @@
 package org.erwinkok.libp2p.crypto.secp256k1
 
-import org.erwinkok.libp2p.crypto.util.Tuple4
+import org.erwinkok.util.Tuple4
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory

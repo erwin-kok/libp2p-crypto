@@ -3,9 +3,9 @@ package org.erwinkok.libp2p.crypto.secp256k1
 import org.erwinkok.libp2p.crypto.math.Subtle.constantTimeEq
 import org.erwinkok.libp2p.crypto.math.Subtle.constantTimeGreater
 import org.erwinkok.libp2p.crypto.math.Subtle.constantTimeGreaterOrEq
-import org.erwinkok.libp2p.crypto.util.Hex
-import org.erwinkok.libp2p.crypto.util.Tuple
-import org.erwinkok.libp2p.crypto.util.Tuple2
+import org.erwinkok.util.Hex
+import org.erwinkok.util.Tuple
+import org.erwinkok.util.Tuple2
 import kotlin.math.max
 import kotlin.math.min
 
@@ -39,7 +39,7 @@ import kotlin.math.min
 // 	n[1] * 2^(26*1) = 2^23 * 2^26  = 2^49
 // 	n[0] * 2^(26*0) = 1    * 2^0   = 1
 // 	Sum: 0 + 0 + ... + 2^49 + 1 = 2^49 + 1
-class FieldVal internal constructor(l0: Int, l1: Int, l2: Int, l3: Int, l4: Int, l5: Int, l6: Int, l7: Int, l8: Int, l9: Int) {
+class FieldVal constructor(l0: Int, l1: Int, l2: Int, l3: Int, l4: Int, l5: Int, l6: Int, l7: Int, l8: Int, l9: Int) {
     private val _n0: Int
     private val _n1: Int
     private val _n2: Int
@@ -1252,9 +1252,9 @@ class FieldVal internal constructor(l0: Int, l1: Int, l2: Int, l3: Int, l4: Int,
         // f = new(fieldVal).SetHex("0abc").Add(1) so that f = 0x0abc + 1
         fun fromHex(hexString: String): FieldVal {
             return if (hexString.length % 2 != 0) {
-                setByteSlice(Hex.decode("0$hexString"))
+                setByteSlice(Hex.decodeOrThrow("0$hexString"))
             } else {
-                setByteSlice(Hex.decode(hexString))
+                setByteSlice(Hex.decodeOrThrow(hexString))
             }
         }
 

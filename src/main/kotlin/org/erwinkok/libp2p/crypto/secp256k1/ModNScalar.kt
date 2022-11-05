@@ -7,7 +7,7 @@ import org.erwinkok.libp2p.crypto.math.Subtle.constantTimeEq
 import org.erwinkok.libp2p.crypto.math.Subtle.constantTimeGreater
 import org.erwinkok.libp2p.crypto.math.Subtle.constantTimeGreaterOrEq
 import org.erwinkok.libp2p.crypto.math.Subtle.constantTimeNotEq
-import org.erwinkok.libp2p.crypto.util.Hex
+import org.erwinkok.util.Hex
 import java.math.BigInteger
 import kotlin.math.max
 import kotlin.math.min

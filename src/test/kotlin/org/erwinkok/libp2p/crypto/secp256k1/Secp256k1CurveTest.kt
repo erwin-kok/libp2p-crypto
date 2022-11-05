@@ -2,13 +2,13 @@ package org.erwinkok.libp2p.crypto.secp256k1
 
 import org.erwinkok.libp2p.crypto.ecdsa.CurvePoint
 import org.erwinkok.libp2p.crypto.math.BigInt
-import org.erwinkok.libp2p.crypto.util.Hex
-import org.erwinkok.libp2p.crypto.util.Tuple
-import org.erwinkok.libp2p.crypto.util.Tuple2
-import org.erwinkok.libp2p.crypto.util.Tuple5
-import org.erwinkok.libp2p.crypto.util.Tuple6
-import org.erwinkok.libp2p.crypto.util.Tuple8
-import org.erwinkok.libp2p.crypto.util.Tuple9
+import org.erwinkok.util.Hex
+import org.erwinkok.util.Tuple
+import org.erwinkok.util.Tuple2
+import org.erwinkok.util.Tuple5
+import org.erwinkok.util.Tuple6
+import org.erwinkok.util.Tuple8
+import org.erwinkok.util.Tuple9
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -305,7 +305,7 @@ internal class Secp256k1CurveTest {
                 // Ensure the resulting positive and negative portions of the overall
                 // NAF representation adhere to the requirements of NAF encoding and
                 // they sum back to the original value.
-                val result = Secp256k1Curve.naf(Hex.decode(input))
+                val result = Secp256k1Curve.naf(Hex.decodeOrThrow(input))
                 val bigInt = BigInt.fromHex(input)
                 checkNafEncoding(result.pos, result.neg, bigInt)
             }
@@ -314,7 +314,7 @@ internal class Secp256k1CurveTest {
 
     @Test
     fun nafEmpty() {
-        val result = Secp256k1Curve.naf(Hex.decode(""))
+        val result = Secp256k1Curve.naf(Hex.decodeOrThrow(""))
         assertTrue(result.pos.isEmpty())
         assertTrue(result.neg.isEmpty())
     }
@@ -355,7 +355,7 @@ internal class Secp256k1CurveTest {
         ).map { (name: String, test_x: String, test_y: String, test_z: String, test_k: String, test_rx: String, test_ry: String, test_rz: String) ->
             DynamicTest.dynamicTest("Test: $name") {
                 val point = JacobianPoint.fromHex(test_x, test_y, test_z)
-                val k = Hex.decode(test_k)
+                val k = Hex.decodeOrThrow(test_k)
                 val expected = JacobianPoint.fromHex(test_rx, test_ry, test_rz)
                 val kModN = ModNScalar.setByteSlice(k)
                 val result = Secp256k1Curve.scalarMultNonConst(kModN, point)
@@ -529,7 +529,7 @@ internal class Secp256k1CurveTest {
             DynamicTest.dynamicTest("Test: $name") {
                 // Decompress the test odd y coordinate for the given test x coordinate
                 // and ensure the returned validity flag matches the expected result.
-                val fx = FieldVal.setByteSlice(Hex.decode(x))
+                val fx = FieldVal.setByteSlice(Hex.decodeOrThrow(x))
                 val (oddY, oddYValid) = Secp256k1Curve.decompressY(fx, true)
                 assertEquals(valid, oddYValid)
 
@@ -537,8 +537,8 @@ internal class Secp256k1CurveTest {
                 assertEquals(valid, evenYValid)
 
                 if (evenYValid) {
-                    assertEquals(FieldVal.setByteSlice(Hex.decode(wantOddY)), oddY.normalize())
-                    assertEquals(FieldVal.setByteSlice(Hex.decode(wantEvenY)), evenY.normalize())
+                    assertEquals(FieldVal.setByteSlice(Hex.decodeOrThrow(wantOddY)), oddY.normalize())
+                    assertEquals(FieldVal.setByteSlice(Hex.decodeOrThrow(wantEvenY)), evenY.normalize())
                     assertTrue(oddY.normalize().isOdd)
                     assertFalse(evenY.normalize().isOdd)
                 }

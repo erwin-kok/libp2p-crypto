@@ -1,6 +1,6 @@
 package org.erwinkok.libp2p.crypto.math
 
-import org.erwinkok.libp2p.crypto.util.Tuple2
+import org.erwinkok.util.Tuple2
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Test

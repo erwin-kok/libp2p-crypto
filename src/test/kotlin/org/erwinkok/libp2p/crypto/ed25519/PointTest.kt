@@ -2,8 +2,8 @@ package org.erwinkok.libp2p.crypto.ed25519
 
 import org.erwinkok.libp2p.crypto.ed25519.tables.AffineLookupTable
 import org.erwinkok.libp2p.crypto.ed25519.tables.NafLookupTable8
-import org.erwinkok.libp2p.crypto.util.Hex
-import org.erwinkok.libp2p.crypto.util.Tuple3
+import org.erwinkok.util.Hex
+import org.erwinkok.util.Tuple3
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Test
@@ -159,7 +159,7 @@ internal class PointTest {
     fun invalidEncodings() {
         // An invalid point, that also happens to have y > p.
         val invalid = "efffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f"
-        assertEquals("edwards25519: invalid point encoding", assertThrows<NumberFormatException> { Point(Hex.decode(invalid)) }.message)
+        assertEquals("edwards25519: invalid point encoding", assertThrows<NumberFormatException> { Point(Hex.decodeOrThrow(invalid)) }.message)
     }
 
     @TestFactory
@@ -308,8 +308,8 @@ internal class PointTest {
             )
         ).map { (name: String, test_encoding: String, test_canonical: String) ->
             DynamicTest.dynamicTest("Test: $name") {
-                val p1 = Point(Hex.decode(test_encoding))
-                val p2 = Point(Hex.decode(test_canonical))
+                val p1 = Point(Hex.decodeOrThrow(test_encoding))
+                val p2 = Point(Hex.decodeOrThrow(test_canonical))
                 assertEquals(p1, p2)
                 assertEquals(test_canonical, Hex.encode(p1.bytes()))
                 checkOnCurve(p1, p2)
@@ -319,10 +319,10 @@ internal class PointTest {
 
     companion object {
         // a random scalar generated using dalek.
-        private val dalekScalar = Scalar(Hex.decode("db6a7209aef99b5945cbc95d5c74eabb4e7367acb6623e67bb880d64f86e0c04"))
+        private val dalekScalar = Scalar(Hex.decodeOrThrow("db6a7209aef99b5945cbc95d5c74eabb4e7367acb6623e67bb880d64f86e0c04"))
 
         // the above, times the edwards25519 basepoint.
-        private val dalekScalarBasepoint = Point(Hex.decode("f4ef7c0a34557b9f723bb61ef94609911cb9c06c17282d8b432b05186a543e48"))
+        private val dalekScalarBasepoint = Point(Hex.decodeOrThrow("f4ef7c0a34557b9f723bb61ef94609911cb9c06c17282d8b432b05186a543e48"))
 
         private fun checkOnCurve(vararg points: Point) {
             for (p in points) {

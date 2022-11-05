@@ -1,8 +1,9 @@
+// Copyright (c) 2022 Erwin Kok. BSD-3-Clause license. See LICENSE file for more details.
 package org.erwinkok.libp2p.crypto.ed25519
 
-import org.erwinkok.libp2p.crypto.util.Hex
-import org.erwinkok.libp2p.crypto.util.Tuple
-import org.erwinkok.libp2p.crypto.util.Tuple2
+import org.erwinkok.util.Hex
+import org.erwinkok.util.Tuple
+import org.erwinkok.util.Tuple2
 import kotlin.experimental.or
 
 // Element represents an element of the field GF(2^255-19). Note that this
@@ -381,7 +382,7 @@ class Element {
         val One = Element(1, 0, 0, 0, 0)
 
         // d is a constant in the curve equation.
-        val d = Element(Hex.decode("a3785913ca4deb75abd841414d0a700098e879777940c78c73fe6f2bee6c0352"))
+        val d = Element(Hex.decodeOrThrow("a3785913ca4deb75abd841414d0a700098e879777940c78c73fe6f2bee6c0352"))
         val d2 = d + d
 
         // Select sets v to a if cond == 1, and to b if cond == 0.
@@ -709,7 +710,7 @@ class Element {
             return n + len8tab[i.toInt()]
         }
 
-        private var len8tab = Hex.decode(
+        private var len8tab = Hex.decodeOrThrow(
             "00010202030303030404040404040404050505050505050505050505050505050606060606060606060606060606060606060606060606060606060606060606" +
                 "07070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707" +
                 "08080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808" +

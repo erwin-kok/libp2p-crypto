@@ -1,7 +1,7 @@
 package org.erwinkok.libp2p.crypto.ed25519
 
 import org.erwinkok.libp2p.crypto.math.BigInt
-import org.erwinkok.libp2p.crypto.util.Hex
+import org.erwinkok.util.Hex
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
@@ -50,7 +50,7 @@ internal class ScalarTest {
         for (i in 0..1023) {
             var input = ByteArray(64)
             random.nextBytes(input)
-            input = Hex.decode("3521f24450efc4a0afe0c1e4c8a11b528b17eec6ae8a419171fd905939d16ae7aa6929ad43201dd8b88b62b0c45688b3d0acaa075d3083e20a47477829fc60f3")
+            input = Hex.decodeOrThrow("3521f24450efc4a0afe0c1e4c8a11b528b17eec6ae8a419171fd905939d16ae7aa6929ad43201dd8b88b62b0c45688b3d0acaa075d3083e20a47477829fc60f3")
             val s = Scalar.setUniformBytes(input)
             assertTrue(s.isReduced)
             val scBig = bigIntFromLittleEndianBytes(s.n)
@@ -62,17 +62,17 @@ internal class ScalarTest {
     @Test
     fun setBytesWithClamping() {
         val r1 = "633d368491364dc9cd4c1bf891b1d59460face1644813240a313e61f2c88216e"
-        val s1 = Scalar.setBytesWithClamping(Hex.decode(r1))
+        val s1 = Scalar.setBytesWithClamping(Hex.decodeOrThrow(r1))
         val p1 = Point.scalarBaseMult(s1)
         assertEquals("1d87a9026fd0126a5736fe1628c95dd419172b5b618457e041c9c861b2494a94", Hex.encode(p1.bytes()))
 
         val r2 = "0000000000000000000000000000000000000000000000000000000000000000"
-        val s2 = Scalar.setBytesWithClamping(Hex.decode(r2))
+        val s2 = Scalar.setBytesWithClamping(Hex.decodeOrThrow(r2))
         val p2 = Point.scalarBaseMult(s2)
         assertEquals("693e47972caf527c7883ad1b39822f026f47db2ab0e1919955b8993aa04411d1", Hex.encode(p2.bytes()))
 
         val r3 = "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
-        val s3 = Scalar.setBytesWithClamping(Hex.decode(r3))
+        val s3 = Scalar.setBytesWithClamping(Hex.decodeOrThrow(r3))
         val p3 = Point.scalarBaseMult(s3)
         assertEquals("12e9a68b73fd5aacdbcaf3e88c46fea6ebedb1aa84eed1842f07f8edab65e3a7", Hex.encode(p3.bytes()))
     }
@@ -112,8 +112,8 @@ internal class ScalarTest {
 
     @Test
     fun testScalarNonAdjacentForm() {
-        val s = Scalar(Hex.decode("1a0e978a90f6622d3747023f8ad8264da758aa1b88e040d1589e7b7f2376ef09"))
-        val expectedNaf = Hex.decode(
+        val s = Scalar(Hex.decodeOrThrow("1a0e978a90f6622d3747023f8ad8264da758aa1b88e040d1589e7b7f2376ef09"))
+        val expectedNaf = Hex.decodeOrThrow(
             "000d0000000000000007000000000000f700000000f500000000030000000001" +
                 "000000000900000000fb00000000000003000000000b000000000b0000000000f" +
                 "70000000000fd0000000009000000000001000000000000ff0000000000090000" +
