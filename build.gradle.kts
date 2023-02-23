@@ -1,25 +1,25 @@
 // Copyright (c) 2022 Erwin Kok. BSD-3-Clause license. See LICENSE file for more details.
 @file:Suppress("UnstableApiUsage")
 
-import com.google.protobuf.gradle.protobuf
-import com.google.protobuf.gradle.protoc
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.gradle.api.tasks.testing.logging.TestStackTraceFilter
 
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    kotlin("jvm") version "1.7.20"
+    kotlin("jvm") version "1.8.10"
     `java-library`
     `java-test-fixtures`
     signing
     `maven-publish`
 
-    id("com.google.protobuf") version "0.8.19"
+    id("com.google.protobuf") version "0.9.2"
 
     alias(libs.plugins.build.kover)
     alias(libs.plugins.build.ktlint)
     alias(libs.plugins.build.nexus)
+    alias(libs.plugins.build.versions)
 }
 
 repositories {
@@ -31,7 +31,7 @@ repositories {
 }
 
 group = "org.erwinkok.libp2p"
-version = "0.3.0-SNAPSHOT"
+version = "0.4.0-SNAPSHOT"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -109,6 +109,19 @@ tasks {
     }
 }
 
+fun isNonStable(version: String): Boolean {
+    val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { version.uppercase().contains(it) }
+    val regex = "^[0-9,.v-]+(-r)?$".toRegex()
+    val isStable = stableKeyword || regex.matches(version)
+    return isStable.not()
+}
+
+tasks.withType<DependencyUpdatesTask> {
+    rejectVersionIf {
+        isNonStable(candidate.version)
+    }
+}
+
 sourceSets {
     main {
         java {
@@ -119,7 +132,7 @@ sourceSets {
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:3.21.2"
+        artifact = "com.google.protobuf:protoc:3.22.0:osx-x86_64"
     }
 }
 
