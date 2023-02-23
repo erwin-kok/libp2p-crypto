@@ -18,7 +18,7 @@ internal class BigIntTest {
             Tuple2("1", BigInteger.valueOf(1)),
             Tuple2("-1", BigInteger.valueOf(-1)),
             Tuple2("100", BigInteger.valueOf(100)),
-            Tuple2("-100", BigInteger.valueOf(-100)),
+            Tuple2("-100", BigInteger.valueOf(-100))
         ).map { (a, b) ->
             DynamicTest.dynamicTest("Test: $a ->  $b") {
                 assertEquals(BigInt.fromDecimal(a), b)
@@ -42,7 +42,7 @@ internal class BigIntTest {
             Tuple2("1", BigInteger.valueOf(1)),
             Tuple2("-1", BigInteger.valueOf(-1)),
             Tuple2("100", BigInteger.valueOf(256)),
-            Tuple2("-100", BigInteger.valueOf(-256)),
+            Tuple2("-100", BigInteger.valueOf(-256))
         ).map { (a, b) ->
             DynamicTest.dynamicTest("Test: $a ->  $b") {
                 assertEquals(BigInt.fromHex(a), b)
