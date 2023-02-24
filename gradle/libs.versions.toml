@@ -11,7 +11,7 @@ ktlint-plugin = "11.2.0"
 nexus-plugin = "1.2.0"
 versions-plugin = "0.46.0"
 
-result-monad = "0.10.0-SNAPSHOT"
+result-monad = "1.0.0"
 
 [libraries]
 kotlin-logging = { module = "io.github.microutils:kotlin-logging-jvm", version.ref = "kotlin-logging" }

@@ -31,11 +31,13 @@ repositories {
 }
 
 group = "org.erwinkok.libp2p"
-version = "0.4.0-SNAPSHOT"
+version = "1.0.0"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
+    withSourcesJar()
+    withJavadocJar()
 }
 
 dependencies {
@@ -107,6 +109,20 @@ tasks {
             stackTraceFilters = setOf(TestStackTraceFilter.ENTRY_POINT)
         }
     }
+
+    withType<DependencyUpdatesTask> {
+        rejectVersionIf {
+            isNonStable(candidate.version)
+        }
+    }
+
+    withType<Javadoc> {
+        exclude("org/erwinkok/libp2p/crypto/pb/**")
+    }
+
+    named<Jar>("sourcesJar") {
+        exclude("org/erwinkok/libp2p/crypto/pb/**")
+    }
 }
 
 fun isNonStable(version: String): Boolean {
@@ -114,12 +130,6 @@ fun isNonStable(version: String): Boolean {
     val regex = "^[0-9,.v-]+(-r)?$".toRegex()
     val isStable = stableKeyword || regex.matches(version)
     return isStable.not()
-}
-
-tasks.withType<DependencyUpdatesTask> {
-    rejectVersionIf {
-        isNonStable(candidate.version)
-    }
 }
 
 sourceSets {
@@ -132,7 +142,7 @@ sourceSets {
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:3.22.0:osx-x86_64"
+        artifact = "com.google.protobuf:protoc:3.22.0"
     }
 }
 
@@ -152,6 +162,7 @@ publishing {
             from(components["java"])
             pom {
                 name.set(project.name)
+                description.set("Cryptographic utilities used by libp2p. Supported key types: ecdsa, ed25519, secp256k1 and rsa")
                 inceptionYear.set("2022")
                 url.set("https://github.com/erwin-kok/libp2p-crypto")
                 licenses {
