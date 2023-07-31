@@ -1,7 +1,8 @@
 # DEPRECATION NOTICE
 
 This library has been moved into kotlin-libp2p, see https://github.com/erwin-kok/kotlin-libp2p.
-As such, the repo will no longer be maintained.
+
+As such, this repo will no longer be maintained.
 
 # libp2p-crypto
 
