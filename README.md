@@ -1,6 +1,7 @@
 # DEPRECATION NOTICE
 
 This library has been moved into kotlin-libp2p, see https://github.com/erwin-kok/kotlin-libp2p.
+As such, the repo will no longer be maintained.
 
 # libp2p-crypto
 
@@ -121,7 +122,7 @@ Bug reports and pull requests are welcome on [GitHub](https://github.com/erwin-k
 
 ## Contact
 
-If you want to contact me, please write an e-mail to: [github@erwinkok.org](mailto:github@erwinkok.org)
+If you want to contact me, please write an e-mail to: [erwin-kok@gmx.com](mailto:erwin-kok@gmx.com)
 
 ## License
 
