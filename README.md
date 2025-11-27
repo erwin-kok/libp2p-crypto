@@ -1,9 +1,3 @@
-# DEPRECATION NOTICE
-
-This library has been moved into kotlin-libp2p, see https://github.com/erwin-kok/kotlin-libp2p.
-
-As such, this repo will no longer be maintained.
-
 # libp2p-crypto
 
 [![ci](https://github.com/erwin-kok/libp2p-crypto/actions/workflows/ci.yaml/badge.svg)](https://github.com/erwin-kok/libp2p-crypto/actions/workflows/ci.yaml)
