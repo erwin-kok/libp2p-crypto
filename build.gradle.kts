@@ -1,52 +1,45 @@
 // Copyright (c) 2022 Erwin Kok. BSD-3-Clause license. See LICENSE file for more details.
 @file:Suppress("UnstableApiUsage")
 
+import com.adarshr.gradle.testlogger.theme.ThemeType
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.gradle.api.tasks.testing.logging.TestLogEvent
-import org.gradle.api.tasks.testing.logging.TestStackTraceFilter
 
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    kotlin("jvm") version "1.8.10"
+    kotlin("jvm") version "2.3.0"
     `java-library`
     `java-test-fixtures`
     signing
     `maven-publish`
 
-    id("com.google.protobuf") version "0.9.2"
+    id("com.google.protobuf") version "0.9.6"
 
     alias(libs.plugins.build.kover)
     alias(libs.plugins.build.ktlint)
     alias(libs.plugins.build.nexus)
     alias(libs.plugins.build.versions)
+    alias(libs.plugins.build.testlogger)
 }
 
 repositories {
-    mavenLocal()
     mavenCentral()
-    maven {
-        url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-    }
 }
 
 group = "org.erwinkok.libp2p"
-version = "1.0.0"
+version = "1.1.0"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
     withSourcesJar()
     withJavadocJar()
 }
 
 dependencies {
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation(platform(kotlin("bom")))
+    implementation(kotlin("stdlib"))
 
     implementation(libs.kotlin.logging)
     implementation(libs.kerby.asn1)
     implementation(libs.result.monad)
+    implementation(libs.protobuf.java)
 
     testImplementation(libs.junit.jupiter.api)
     testImplementation(libs.junit.jupiter.params)
@@ -56,72 +49,27 @@ dependencies {
 
     testRuntimeOnly(libs.junit.jupiter.engine)
 
-    api(libs.protobuf.java)
+    testRuntimeOnly(libs.junit.jupiter.engine)
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
-tasks {
-    compileKotlin {
-        println("Configuring KotlinCompile $name in project ${project.name}...")
-        kotlinOptions {
-            @Suppress("SpellCheckingInspection")
-            freeCompilerArgs = listOf("-Xjsr305=strict", "-opt-in=kotlin.RequiresOptIn")
-            allWarningsAsErrors = true
-            jvmTarget = "11"
-            languageVersion = "1.7"
-            apiVersion = "1.7"
-        }
-    }
+testlogger {
+    theme = ThemeType.MOCHA
+}
 
-    compileTestKotlin {
-        println("Configuring KotlinTestCompile $name in project ${project.name}...")
-        kotlinOptions {
-            @Suppress("SpellCheckingInspection")
-            freeCompilerArgs = listOf("-Xjsr305=strict")
-            allWarningsAsErrors = true
-            jvmTarget = "11"
-            languageVersion = "1.7"
-            apiVersion = "1.7"
-        }
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
     }
+}
 
-    compileJava {
-        println("Configuring compileJava $name in project ${project.name}...")
-        @Suppress("SpellCheckingInspection")
-        options.compilerArgs.addAll(
-            listOf(
-                "-Xlint:all,-overloads,-rawtypes,-unchecked,-cast"
-                // "-Werror"
-            )
-        )
-        sourceCompatibility = "11"
-        targetCompatibility = "11"
-        options.encoding = "UTF-8"
-    }
+kotlin {
+    jvmToolchain(21)
+}
 
-    test {
-        useJUnitPlatform()
-        testLogging {
-            events = setOf(TestLogEvent.PASSED, TestLogEvent.FAILED)
-            exceptionFormat = TestExceptionFormat.FULL
-            showExceptions = true
-            showCauses = true
-            maxGranularity = 3
-            stackTraceFilters = setOf(TestStackTraceFilter.ENTRY_POINT)
-        }
-    }
-
-    withType<DependencyUpdatesTask> {
-        rejectVersionIf {
-            isNonStable(candidate.version)
-        }
-    }
-
-    withType<Javadoc> {
-        exclude("org/erwinkok/libp2p/crypto/pb/**")
-    }
-
-    named<Jar>("sourcesJar") {
-        exclude("org/erwinkok/libp2p/crypto/pb/**")
+tasks.withType<DependencyUpdatesTask> {
+    rejectVersionIf {
+        isNonStable(candidate.version)
     }
 }
 
@@ -130,6 +78,20 @@ fun isNonStable(version: String): Boolean {
     val regex = "^[0-9,.v-]+(-r)?$".toRegex()
     val isStable = stableKeyword || regex.matches(version)
     return isStable.not()
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
+
+tasks {
+    withType<Javadoc> {
+        exclude("org/erwinkok/libp2p/crypto/pb/**")
+    }
+
+    named<Jar>("sourcesJar") {
+        exclude("org/erwinkok/libp2p/crypto/pb/**")
+    }
 }
 
 sourceSets {
@@ -142,18 +104,8 @@ sourceSets {
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:3.22.0"
+        artifact = "com.google.protobuf:protoc:4.33.4"
     }
-}
-
-kover {
-    htmlReport {
-        onCheck.set(true)
-    }
-}
-
-koverMerged {
-    enable()
 }
 
 publishing {

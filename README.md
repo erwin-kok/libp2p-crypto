@@ -1,26 +1,35 @@
 # libp2p-crypto
 
+Cryptographic utilities used by libp2p.
+
 [![ci](https://github.com/erwin-kok/libp2p-crypto/actions/workflows/ci.yaml/badge.svg)](https://github.com/erwin-kok/libp2p-crypto/actions/workflows/ci.yaml)
+[![Kotlin](https://img.shields.io/badge/kotlin-2.3.0-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![License](https://img.shields.io/github/license/erwin-kok/libp2p-crypto.svg)](https://github.com/erwin-kok/libp2p-crypto/blob/master/LICENSE)
 
 ## Introduction
 
-This project contains various cryptographic utilities used by libp2p. It can generate key pairs (private/public keys), 
+This project contains various cryptographic utilities used by libp2p. It can generate key pairs (private/public keys),
 marshal and unmarshal these public and private keys. Further it is possible to sign and verify messages. And lastly it
-supports converting these private/public to/from protocol buffer format. 
+supports converting these private/public to/from protocol buffer format.
 
-Four cryptographic key types are currently supported:
-- ecdsa
-- ed25519
-- secp256k1
-- rsa
+The library is intended as an internal building block for libp2p-based systems, not as a general-purpose cryptography framework.
 
-## Using the Result Monad
+## Supported Key Types
 
-This project is using the [result-monad](https://github.com/erwin-kok/result-monad)
+The following public/private key types are supported:
 
-This means that all methods of `CryptoUtil` return a `Result<...>`. The caller can check whether an error was generated, 
-or it can use the value. For example:
+- ECDSA
+- Ed25519
+- Secp256k1
+- RSA
+
+## Error Handling
+
+All public APIs use the [`result-monad`](https://github.com/erwin-kok/result-monad) for explicit error handling.
+
+Methods return `Result<T>` rather than throwing exceptions. Callers are expected to handle failures explicitly or propagate them as needed.
+
+Example:
 
 ```kotlin
 val (privateKey, publicKey) = CryptoUtil.generateKeyPair(KeyType.ECDSA)
@@ -30,15 +39,13 @@ val (privateKey, publicKey) = CryptoUtil.generateKeyPair(KeyType.ECDSA)
     }
 ```
 
-In the examples below `OnFailure` is used as a convenience, but other methods can be used as well.
-
-If you would like to throw the Error instead, do:
+For callers that prefer exception-based control flow, results can be converted explicitly:
 
 ```kotlin
 val (privateKey, publicKey) = CryptoUtil.generateKeyPair(KeyType.ECDSA).getOrThrow()
 ```
 
-This will return the key pair when no error occurred, and throws an `Error` exception when an error occurred. 
+This will return the key pair when no error occurred, and throws an `Error` exception when an error occurred.
 
 ## Key Generation
 
@@ -53,14 +60,15 @@ val (privateKey, publicKey) = CryptoUtil.generateKeyPair(KeyType.ECDSA)
 ```
 
 The key-type can be either:
-- KeyType.RSA 
-- KeyType.ED25519 
-- KeyType.SECP256K1 
+
+- KeyType.RSA
+- KeyType.ED25519
+- KeyType.SECP256K1
 - KeyType.ECDSA
 
 ## Signing and Verifying messages
 
-With a private key, you can sign a message:
+Messages are signed using a private key:
 
 ```kotlin
 val message = "Hello, World".toByteArray()
@@ -70,7 +78,8 @@ val signature = privateKey.sign(message)
     }
 ```
 
-To verify a message using a provided signature:
+Verification is performed using the corresponding public key:
+
 ```kotlin
 val message = "Hello, World".toByteArray()
 val verified = publicKey.verify(message, signature)
@@ -79,11 +88,12 @@ val verified = publicKey.verify(message, signature)
     }
 ```
 
-`verified` is a boolean indicating that the message was correct with respect to the given signature.
-Obviously, you can only verify a message using a publicKey that matches the privateKey that signed this message.
+The verified value indicates whether the signature matches the message and public key.
 
 ## Marshalling and Unmarshalling
-To marshal a privateKey, do:
+
+Private keys can be serialized and deserialized:
+
 ```kotlin
 val privBytes = CryptoUtil.marshalPrivateKey(privateKey)
     .onFailure {
@@ -98,6 +108,7 @@ val privateKey2 = CryptoUtil.unmarshalPrivateKey(privBytes)
 ```
 
 Likewise for a publicKey:
+
 ```kotlin
 val pubBytes = CryptoUtil.marshalPublicKey(publicKey)
     .onFailure {
@@ -111,13 +122,17 @@ val publicKey2 = CryptoUtil.unmarshalPublicKey(pubBytes)
 // Here `publicKey` and `publicKey2` should be equal
 ```
 
-## Contributing
+The marshalled representations are suitable for storage or transmission and are compatible with libp2p protocol expectations.
 
-Bug reports and pull requests are welcome on [GitHub](https://github.com/erwin-kok/libp2p-crypto).
+## Scope and Non-Goals
 
-## Contact
+This project intentionally does not aim to:
 
-If you want to contact me, please write an e-mail to: [erwin.kok@protonmail.com](mailto:erwin.kok@protonmail.com)
+- Provide a comprehensive cryptography API
+- Abstract away cryptographic concepts
+- Introduce new cryptographic primitives
+
+It focuses on correctness, interoperability, and explicit APIs aligned with libp2p requirements.
 
 ## License
 

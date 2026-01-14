@@ -10,13 +10,13 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.math.BigInteger
-import java.util.Random
 import kotlin.experimental.and
+import kotlin.random.Random
 
 internal class ScalarTest {
     @Test
     fun generate() {
-        for (i in 0..1023) {
+        repeat(1024) {
             val s = generateScalar()
             assertTrue(s.isReduced, "Generated scalar $s was not reduced")
         }
@@ -24,9 +24,8 @@ internal class ScalarTest {
 
     @Test
     fun setCanonicalBytes() {
-        for (i in 0..1023) {
-            val input = ByteArray(32)
-            random.nextBytes(input)
+        repeat(1024) {
+            val input = Random.nextBytes(32)
             val mask = (1 shl 4) - 1
             input[input.size - 1] = input[input.size - 1] and mask.toByte()
             val s = Scalar.setCanonicalBytes(input)
@@ -48,9 +47,9 @@ internal class ScalarTest {
     fun setUniformBytes() {
         var mod = BigInt.fromDecimal("27742317777372353535851937790883648493")
         mod = mod.add(BigInteger.ONE.shiftLeft(252))
-        for (i in 0..1023) {
+        repeat(1024) {
             var input = ByteArray(64)
-            random.nextBytes(input)
+            Random.nextBytes(input)
             input = Hex.decodeOrThrow("3521f24450efc4a0afe0c1e4c8a11b528b17eec6ae8a419171fd905939d16ae7aa6929ad43201dd8b88b62b0c45688b3d0acaa075d3083e20a47477829fc60f3")
             val s = Scalar.setUniformBytes(input)
             assertTrue(s.isReduced)
@@ -81,7 +80,7 @@ internal class ScalarTest {
     @Test
     fun scalarMultiplyDistributesOverAdd() {
         // Compute t1 = (x+y)*z
-        for (i in 0..1023) {
+        repeat(1024) {
             val x = generateScalar()
             val y = generateScalar()
             val z = generateScalar()
@@ -99,7 +98,7 @@ internal class ScalarTest {
 
     @Test
     fun scalarAddLikeSubNeg() {
-        for (i in 0..1023) {
+        repeat(1024) {
             val x = generateScalar()
             val y = generateScalar()
             // Compute t1 = x - y
@@ -122,7 +121,7 @@ internal class ScalarTest {
                 "000f500000000f900000000f3000000000b00000000f700000000000100000000" +
                 "00f10000000001000000000700000000000000000500000000000d00000000000" +
                 "00b00000000000f0000000000f700000000000000ff0000000000000007000000" +
-                "0000f100000000000f000000000f000000000f00000000000100000000"
+                "0000f100000000000f000000000f000000000f00000000000100000000",
         )
         val sNaf = s.nonAdjacentForm(5)
         for (i in 0..255) {
@@ -145,9 +144,8 @@ internal class ScalarTest {
     }
 
     companion object {
-        private val random = Random()
         fun generateScalar(): Scalar {
-            val diceRoll = random.nextInt(100)
+            val diceRoll = Random.nextInt(100)
             if (diceRoll == 0) {
                 return Scalar.Zero
             } else if (diceRoll == 1) {
@@ -156,8 +154,7 @@ internal class ScalarTest {
                 return Scalar.MinusOne
             } else if (diceRoll < 5) {
                 // Generate a low scalar in [0, 2^125).
-                val r = ByteArray(16)
-                random.nextBytes(r)
+                val r = Random.nextBytes(16)
                 val v = ByteArray(32)
                 System.arraycopy(r, 0, v, 0, 16)
                 val mask = (1 shl 5) - 1
@@ -167,8 +164,7 @@ internal class ScalarTest {
                 // Generate a high scalar in [2^252, 2^252 + 2^124).
                 val v = ByteArray(32)
                 v[31] = (1 shl 4).toByte()
-                val r = ByteArray(16)
-                random.nextBytes(r)
+                val r = Random.nextBytes(16)
                 System.arraycopy(r, 0, v, 0, 16)
                 val mask = (1 shl 4) - 1
                 v[15] = v[15] and mask.toByte()
@@ -177,8 +173,7 @@ internal class ScalarTest {
                 // Generate a valid scalar in [0, l) by returning [0, 2^252) which has a
                 // negligibly different distribution (the former has a 2^-127.6 chance
                 // of being out of the latter range).
-                val v = ByteArray(32)
-                random.nextBytes(v)
+                val v = Random.nextBytes(32)
                 val byte = (1 shl 4) - 1
                 v[31] = v[31] and byte.toByte()
                 return Scalar(v)

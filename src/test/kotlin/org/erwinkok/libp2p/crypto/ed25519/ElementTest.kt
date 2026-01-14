@@ -12,13 +12,11 @@ import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
 import java.math.BigInteger
-import java.util.Random
 import java.util.stream.Stream
 import kotlin.experimental.and
+import kotlin.random.Random
 
 internal class ElementTest {
-    private val random = Random()
-
     // weirdLimbs can be combined to generate a range of edge-case field elements.
     // 0 and -1 are intentionally more weighted, as they combine well.
     private val weirdLimbs51 = longArrayOf(
@@ -31,7 +29,7 @@ internal class ElementTest {
         (1L shl 51) - 20,
         (1L shl 51) - 19,
         (1L shl 51) - 1, (1L shl 51) - 1,
-        (1L shl 51) - 1, (1L shl 51) - 1
+        (1L shl 51) - 1, (1L shl 51) - 1,
     )
 
     private val weirdLimbs52 = longArrayOf(
@@ -49,15 +47,15 @@ internal class ElementTest {
         1L shl 51,
         (1L shl 51) + 1,
         (1L shl 52) - 19,
-        (1L shl 52) - 1
+        (1L shl 52) - 1,
     )
 
     @Test
     fun multiplyDistributesOverAdd() {
-        for (i in 0..1023) {
-            val x = generate(random)
-            val y = generate(random)
-            val z = generate(random)
+        repeat(1024) {
+            val x = generate()
+            val y = generate()
+            val z = generate()
 
             // Compute t1 = (x+y)*z
             val t1 = (x + y) * z
@@ -91,9 +89,8 @@ internal class ElementTest {
 
     @Test
     fun setBytesRoundTrip() {
-        for (i in 0..1023) {
-            val input = ByteArray(32)
-            random.nextBytes(input)
+        repeat(1023) {
+            val input = Random.nextBytes(32)
             val fe = Element(input)
             // Mask the most significant bit as it's ignored by SetBytes. (Now
             // instead of earlier so we check the masking in SetBytes is working.)
@@ -115,12 +112,12 @@ internal class ElementTest {
         return listOf(
             Tuple2(
                 Element(358744748052810L, 1691584618240980L, 977650209285361L, 1429865912637724L, 560044844278676L),
-                Hex.decodeOrThrow("4ad145c54646a1de38e2e513703c195cbb4ade38329933e9284a3906a0b9d51f")
+                Hex.decodeOrThrow("4ad145c54646a1de38e2e513703c195cbb4ade38329933e9284a3906a0b9d51f"),
             ),
             Tuple2(
                 Element(84926274344903L, 473620666599931L, 365590438845504L, 1028470286882429L, 2146499180330972L),
-                Hex.decodeOrThrow("c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac037a")
-            )
+                Hex.decodeOrThrow("c7176a703d4dd84fba3c0b760d10670f2a2053fa2c39ccc64ec7fd7792ac037a"),
+            ),
         ).map { (test_fe: Element, test_b: ByteArray) ->
             DynamicTest.dynamicTest("Test: $test_fe") {
                 assertArrayEquals(test_b, test_fe.bytes())
@@ -131,9 +128,8 @@ internal class ElementTest {
 
     @Test
     fun bytesBigEquivalence() {
-        for (i in 0..1023) {
-            val input = ByteArray(32)
-            random.nextBytes(input)
+        repeat(1024) {
+            val input = Random.nextBytes(32)
             val fe = Element(input)
             val mask = ((1 shl 7) - 1).toByte()
             input[input.size - 1] = input[input.size - 1] and mask // mask the most significant bit
@@ -157,9 +153,8 @@ internal class ElementTest {
     fun consistency() {
         val x = Element(1, 1, 1, 1, 1)
         assertEquals(x * x, x.square())
-        for (i in 0..1023) {
-            val bytes = ByteArray(32)
-            random.nextBytes(bytes)
+        repeat(1024) {
+            val bytes = Random.nextBytes(32)
             val x1 = Element(bytes)
             assertEquals(x1 * x1, x1.square())
         }
@@ -169,9 +164,8 @@ internal class ElementTest {
     fun invert() {
         val x = Element(1, 1, 1, 1, 1)
         assertEquals(Element.One, (x * x.invert()).reduce())
-        for (i in 0..1023) {
-            val bytes = ByteArray(32)
-            random.nextBytes(bytes)
+        repeat(1024) {
+            val bytes = Random.nextBytes(32)
             val x1 = Element(bytes)
             assertEquals(Element.One, (x1 * x1.invert()).reduce())
         }
@@ -196,9 +190,9 @@ internal class ElementTest {
 
     @Test
     fun mult32() {
-        for (i in 0..1023) {
-            val x = generate(random)
-            val y = random.nextInt()
+        repeat(1024) {
+            val x = generate()
+            val y = Random.nextInt()
             var t1 = Element.Zero
             for (j in 0..99) {
                 t1 = t1.mult32(x, y)
@@ -224,43 +218,43 @@ internal class ElementTest {
                 "0000000000000000000000000000000000000000000000000000000000000000",
                 "0000000000000000000000000000000000000000000000000000000000000000",
                 true,
-                "0000000000000000000000000000000000000000000000000000000000000000"
+                "0000000000000000000000000000000000000000000000000000000000000000",
             ),
             // 0/1 == 0²
             Tuple4(
                 "0000000000000000000000000000000000000000000000000000000000000000",
                 "0100000000000000000000000000000000000000000000000000000000000000",
                 true,
-                "0000000000000000000000000000000000000000000000000000000000000000"
+                "0000000000000000000000000000000000000000000000000000000000000000",
             ),
             // If u is non-zero and v is zero, defined to return (0, FALSE).
             Tuple4(
                 "0100000000000000000000000000000000000000000000000000000000000000",
                 "0000000000000000000000000000000000000000000000000000000000000000",
                 false,
-                "0000000000000000000000000000000000000000000000000000000000000000"
+                "0000000000000000000000000000000000000000000000000000000000000000",
             ),
             // 2/1 is not square in this field.
             Tuple4(
                 "0200000000000000000000000000000000000000000000000000000000000000",
                 "0100000000000000000000000000000000000000000000000000000000000000",
                 false,
-                "3c5ff1b5d8e4113b871bd052f9e7bcd0582804c266ffb2d4f4203eb07fdb7c54"
+                "3c5ff1b5d8e4113b871bd052f9e7bcd0582804c266ffb2d4f4203eb07fdb7c54",
             ),
             // 4/1 == 2²
             Tuple4(
                 "0400000000000000000000000000000000000000000000000000000000000000",
                 "0100000000000000000000000000000000000000000000000000000000000000",
                 true,
-                "0200000000000000000000000000000000000000000000000000000000000000"
+                "0200000000000000000000000000000000000000000000000000000000000000",
             ),
             // 1/4 == (2⁻¹)² == (2^(p-2))² per Euler's theorem
             Tuple4(
                 "0100000000000000000000000000000000000000000000000000000000000000",
                 "0400000000000000000000000000000000000000000000000000000000000000",
                 true,
-                "f6ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff3f"
-            )
+                "f6ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff3f",
+            ),
         ).map { (test_u: String, test_v: String, test_wasSquare: Boolean, test_r: String) ->
             DynamicTest.dynamicTest("Test: $test_u $test_v") {
                 val u = Element(Hex.decodeOrThrow(test_u))
@@ -317,32 +311,32 @@ internal class ElementTest {
         return buf
     }
 
-    private fun generateFieldElement(rand: Random): Element {
+    private fun generateFieldElement(): Element {
         val maskLow52Bits = (1L shl 52) - 1
         return Element(
-            rand.nextLong() and maskLow52Bits,
-            rand.nextLong() and maskLow52Bits,
-            rand.nextLong() and maskLow52Bits,
-            rand.nextLong() and maskLow52Bits,
-            rand.nextLong() and maskLow52Bits
+            Random.nextLong() and maskLow52Bits,
+            Random.nextLong() and maskLow52Bits,
+            Random.nextLong() and maskLow52Bits,
+            Random.nextLong() and maskLow52Bits,
+            Random.nextLong() and maskLow52Bits,
         )
     }
 
-    private fun generateWeirdFieldElement(rand: Random): Element {
+    private fun generateWeirdFieldElement(): Element {
         return Element(
-            weirdLimbs52[rand.nextInt(weirdLimbs52.size)],
-            weirdLimbs51[rand.nextInt(weirdLimbs51.size)],
-            weirdLimbs51[rand.nextInt(weirdLimbs51.size)],
-            weirdLimbs51[rand.nextInt(weirdLimbs51.size)],
-            weirdLimbs51[rand.nextInt(weirdLimbs51.size)]
+            weirdLimbs52[Random.nextInt(weirdLimbs52.size)],
+            weirdLimbs51[Random.nextInt(weirdLimbs51.size)],
+            weirdLimbs51[Random.nextInt(weirdLimbs51.size)],
+            weirdLimbs51[Random.nextInt(weirdLimbs51.size)],
+            weirdLimbs51[Random.nextInt(weirdLimbs51.size)],
         )
     }
 
-    private fun generate(random: Random): Element {
-        return if (random.nextInt(2) == 0) {
-            generateWeirdFieldElement(random)
+    private fun generate(): Element {
+        return if (Random.nextInt(2) == 0) {
+            generateWeirdFieldElement()
         } else {
-            generateFieldElement(random)
+            generateFieldElement()
         }
     }
 }

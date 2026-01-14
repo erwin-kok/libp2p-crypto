@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
 import java.math.BigInteger
 import java.security.SecureRandom
-import java.util.Random
 import java.util.stream.Stream
 
 internal class Secp256k1CurveTest {
@@ -36,7 +35,7 @@ internal class Secp256k1CurveTest {
                 "1",
                 "d74bf844b0862475103d96a611cf2d898447e288d34b360bc885cb8ce7c00575",
                 "131c670d414c4546b88ac3ff664611b1c38ceb1c21d76369d7a7a0969d61d97d",
-                "1"
+                "1",
             ),
             // Addition with a point at infinity (right hand side).
             // P + ∞ = P
@@ -49,7 +48,7 @@ internal class Secp256k1CurveTest {
                 "0",
                 "d74bf844b0862475103d96a611cf2d898447e288d34b360bc885cb8ce7c00575",
                 "131c670d414c4546b88ac3ff664611b1c38ceb1c21d76369d7a7a0969d61d97d",
-                "1"
+                "1",
             ),
             // Addition with z1=z2=1 different x values.
             Tuple9(
@@ -61,7 +60,7 @@ internal class Secp256k1CurveTest {
                 "1",
                 "0cfbc7da1e569b334460788faae0286e68b3af7379d5504efc25e4dba16e46a6",
                 "e205f79361bbe0346b037b4010985dbf4f9e1e955e7d0d14aca876bfa79aad87",
-                "44a5646b446e3877a648d6d381370d9ef55a83b666ebce9df1b1d7d65b817b2f"
+                "44a5646b446e3877a648d6d381370d9ef55a83b666ebce9df1b1d7d65b817b2f",
             ),
             // Addition with z1=z2=1 same x opposite y.
             // P(x, y, z) + P(x, -y, z) = infinity
@@ -74,7 +73,7 @@ internal class Secp256k1CurveTest {
                 "1",
                 "0",
                 "0",
-                "0"
+                "0",
             ),
             // Addition with z1=z2=1 same point.
             // P(x, y, z) + P(x, y, z) = 2P
@@ -87,7 +86,7 @@ internal class Secp256k1CurveTest {
                 "1",
                 "ec9f153b13ee7bd915882859635ea9730bf0dc7611b2c7b0e37ee64f87c50c27",
                 "b082b53702c466dcf6e984a35671756c506c67c2fcb8adb408c44dd0755c8f2a",
-                "16e3d537ae61fb1247eda4b4f523cfbaee5152c0d0d96b520376833c1e594464"
+                "16e3d537ae61fb1247eda4b4f523cfbaee5152c0d0d96b520376833c1e594464",
             ),
 
             // Addition with z1=z2 (!=1) different x values.
@@ -100,7 +99,7 @@ internal class Secp256k1CurveTest {
                 "2",
                 "cfbc7da1e569b334460788faae0286e68b3af7379d5504efc25e4dba16e46a60",
                 "817de4d86ef80d1ac0ded00426176fd3e787a5579f43452b2a1db021e6ac3778",
-                "129591ad11b8e1de99235b4e04dc367bd56a0ed99baf3a77c6c75f5a6e05f08d"
+                "129591ad11b8e1de99235b4e04dc367bd56a0ed99baf3a77c6c75f5a6e05f08d",
             ),
             // Addition with z1=z2 (!=1) same x opposite y.
             // P(x, y, z) + P(x, -y, z) = infinity
@@ -113,7 +112,7 @@ internal class Secp256k1CurveTest {
                 "2",
                 "0",
                 "0",
-                "0"
+                "0",
             ),
             // Addition with z1=z2 (!=1) same point.
             // P(x, y, z) + P(x, y, z) = 2P
@@ -126,7 +125,7 @@ internal class Secp256k1CurveTest {
                 "2",
                 "9f153b13ee7bd915882859635ea9730bf0dc7611b2c7b0e37ee65073c50fabac",
                 "2b53702c466dcf6e984a35671756c506c67c2fcb8adb408c44dd125dc91cb988",
-                "6e3d537ae61fb1247eda4b4f523cfbaee5152c0d0d96b520376833c2e5944a11"
+                "6e3d537ae61fb1247eda4b4f523cfbaee5152c0d0d96b520376833c2e5944a11",
             ),
 
             // Addition with z1!=z2 and z2=1 different x values.
@@ -139,7 +138,7 @@ internal class Secp256k1CurveTest {
                 "1",
                 "3ef1f68795a6ccd1181e23eab80a1b9a2cebdcde755413bf097936eb5b91b4f3",
                 "0bef26c377c068d606f6802130bb7e9f3c3d2abcfa1a295950ed81133561cb04",
-                "252b235a2371c3bd3246b69c09b86cf7aad41db3375e74ef8d8ebeb4dc0be11a"
+                "252b235a2371c3bd3246b69c09b86cf7aad41db3375e74ef8d8ebeb4dc0be11a",
             ),
             // Addition with z1!=z2 and z2=1 same x opposite y.
             // P(x, y, z) + P(x, -y, z) = infinity
@@ -152,7 +151,7 @@ internal class Secp256k1CurveTest {
                 "1",
                 "0",
                 "0",
-                "0"
+                "0",
             ),
             // Addition with z1!=z2 and z2=1 same point.
             // P(x, y, z) + P(x, y, z) = 2P
@@ -165,7 +164,7 @@ internal class Secp256k1CurveTest {
                 "1",
                 "9f153b13ee7bd915882859635ea9730bf0dc7611b2c7b0e37ee65073c50fabac",
                 "2b53702c466dcf6e984a35671756c506c67c2fcb8adb408c44dd125dc91cb988",
-                "6e3d537ae61fb1247eda4b4f523cfbaee5152c0d0d96b520376833c2e5944a11"
+                "6e3d537ae61fb1247eda4b4f523cfbaee5152c0d0d96b520376833c2e5944a11",
             ),
 
             // Addition with z1!=z2 and z2!=1 different x values.
@@ -179,7 +178,7 @@ internal class Secp256k1CurveTest {
                 "3",
                 "3f07081927fd3f6dadd4476614c89a09eba7f57c1c6c3b01fa2d64eac1eef31e",
                 "949166e04ebc7fd95a9d77e5dfd88d1492ecffd189792e3944eb2b765e09e031",
-                "eb8cba81bcffa4f44d75427506737e1f045f21e6d6f65543ee0e1d163540c931"
+                "eb8cba81bcffa4f44d75427506737e1f045f21e6d6f65543ee0e1d163540c931",
             ),
 
             // Addition with z1!=z2 and z2!=1 same x opposite y.
@@ -193,7 +192,7 @@ internal class Secp256k1CurveTest {
                 "3",
                 "0",
                 "0",
-                "0"
+                "0",
             ),
 
             // Addition with z1!=z2 and z2!=1 same point.
@@ -207,13 +206,15 @@ internal class Secp256k1CurveTest {
                 "3",
                 "9f153b13ee7bd915882859635ea9730bf0dc7611b2c7b0e37ee65073c50fabac",
                 "2b53702c466dcf6e984a35671756c506c67c2fcb8adb408c44dd125dc91cb988",
-                "6e3d537ae61fb1247eda4b4f523cfbaee5152c0d0d96b520376833c2e5944a11"
-            )
-        ).map { (
-            test_x1: String, test_y1: String, test_z1: String, // Coordinates (in hex) of first point to add
-            test_x2: String, test_y2: String, test_z2: String, // Coordinates (in hex) of second point to add
-            test_x3: String, test_y3: String, test_z3: String
-        ) ->
+                "6e3d537ae61fb1247eda4b4f523cfbaee5152c0d0d96b520376833c2e5944a11",
+            ),
+        ).map {
+                (
+                    test_x1: String, test_y1: String, test_z1: String, // Coordinates (in hex) of first point to add
+                    test_x2: String, test_y2: String, test_z2: String, // Coordinates (in hex) of second point to add
+                    test_x3: String, test_y3: String, test_z3: String,
+                ),
+            ->
             DynamicTest.dynamicTest("Test: $test_x1, $test_x2, $test_x3") {
                 // Convert hex to field values.
                 val p1 = JacobianPoint.fromHex(test_x1, test_y1, test_z1)
@@ -242,7 +243,7 @@ internal class Secp256k1CurveTest {
                 "0",
                 "0",
                 "0",
-                "0"
+                "0",
             ),
             // Doubling with z1=1.
             Tuple6(
@@ -251,7 +252,7 @@ internal class Secp256k1CurveTest {
                 "1",
                 "ec9f153b13ee7bd915882859635ea9730bf0dc7611b2c7b0e37ee64f87c50c27",
                 "b082b53702c466dcf6e984a35671756c506c67c2fcb8adb408c44dd0755c8f2a",
-                "16e3d537ae61fb1247eda4b4f523cfbaee5152c0d0d96b520376833c1e594464"
+                "16e3d537ae61fb1247eda4b4f523cfbaee5152c0d0d96b520376833c1e594464",
             ),
             // Doubling with z1!=1.
             Tuple6(
@@ -260,7 +261,7 @@ internal class Secp256k1CurveTest {
                 "2",
                 "9f153b13ee7bd915882859635ea9730bf0dc7611b2c7b0e37ee65073c50fabac",
                 "2b53702c466dcf6e984a35671756c506c67c2fcb8adb408c44dd125dc91cb988",
-                "6e3d537ae61fb1247eda4b4f523cfbaee5152c0d0d96b520376833c2e5944a11"
+                "6e3d537ae61fb1247eda4b4f523cfbaee5152c0d0d96b520376833c2e5944a11",
             ),
             // From btcd issue #709.
             Tuple6(
@@ -269,12 +270,15 @@ internal class Secp256k1CurveTest {
                 "0000000000000000000000000000000000000000000000000000000000000001",
                 "4a5e0559863ebb4e9ed85f5c4fa76003d05d9a7626616e614a1f738621e3c220",
                 "00000000000000000000000000000000000000000000000000000001b1388778",
-                "7be30acc88bceac58d5b4d15de05a931ae602a07bcb6318d5dedc563e4482993"
-            )
-        ).map { (
-            test_x1: String, test_y1: String, test_z1: String, // Coordinates (in hex) of point to double
-            test_x3: String, test_y3: String, test_z3: String
-        ) -> // Coordinates (in hex) of expected point
+                "7be30acc88bceac58d5b4d15de05a931ae602a07bcb6318d5dedc563e4482993",
+            ),
+        ).map {
+                (
+                    test_x1: String, test_y1: String, test_z1: String, // Coordinates (in hex) of point to double
+                    test_x3: String, test_y3: String, test_z3: String,
+                ),
+            ->
+            // Coordinates (in hex) of expected point
             DynamicTest.dynamicTest("Test: $test_x1, $test_y1, $test_z1") {
                 // Convert hex to field values.
                 val p1 = JacobianPoint.fromHex(test_x1, test_y1, test_z1)
@@ -300,7 +304,7 @@ internal class Secp256k1CurveTest {
             Tuple2("first term of balanced length-two representation #1", "b776e53fb55f6b006a270d42d64ec2b1"),
             Tuple2("second term balanced length-two representation #1", "d6cc32c857f1174b604eefc544f0c7f7"),
             Tuple2("first term of balanced length-two representation #2", "45c53aa1bb56fcd68c011e2dad6758e4"),
-            Tuple2("second term of balanced length-two representation #2", "a2e79d200f27f2360fba57619936159b")
+            Tuple2("second term of balanced length-two representation #2", "a2e79d200f27f2360fba57619936159b"),
         ).map { (name: String, input: String) ->
             DynamicTest.dynamicTest("Test: $name") {
                 // Ensure the resulting positive and negative portions of the overall
@@ -322,7 +326,7 @@ internal class Secp256k1CurveTest {
 
     @Test
     fun nafRandom() {
-        for (i in 0..1024) {
+        repeat(1024) {
             val (bigIntVal, modNVal) = randIntAndModNScalar()
             val valBytes = modNVal.bytes()
             val result = Secp256k1Curve.naf(valBytes)
@@ -341,7 +345,7 @@ internal class Secp256k1CurveTest {
                 "18e14a7b6a307f426a94f8114701e7c8e774e7f9a47e2c2035db29a206321725",
                 "e94ce9a0f0ebf730a168b834bbb0c56b9d24040cabd0187ca1d74c51d10c9cc4",
                 "f8130e7ce8c7e521e68a6ed95dcdea39ee447dc109503936a8ccd282da8191ff",
-                "7a0ce7c2cba4f0f98f81704096a1092d2adcbc3066900ca4bd6d8ee994524a52"
+                "7a0ce7c2cba4f0f98f81704096a1092d2adcbc3066900ca4bd6d8ee994524a52",
             ),
             Tuple8(
                 "From btcd issue #709",
@@ -351,8 +355,8 @@ internal class Secp256k1CurveTest {
                 "a2e8ba2e8ba2e8ba2e8ba2e8ba2e8ba219b51835b55cc30ebfe2f6599bc56f58",
                 "ab73a226e5b14c350ae7e44ea0ba158b05079ff5735e89d3b462741128f67f0d",
                 "2db60fff1e90aea7d0aae787afc499d4c5ed3e48b3fc44252cccf836c0b8be79",
-                "5770fc1ff2e893dff52dd87c7f9edbc50778d365511a499e34bfa0949a53295b"
-            )
+                "5770fc1ff2e893dff52dd87c7f9edbc50778d365511a499e34bfa0949a53295b",
+            ),
         ).map { (name: String, test_x: String, test_y: String, test_z: String, test_k: String, test_rx: String, test_ry: String, test_rz: String) ->
             DynamicTest.dynamicTest("Test: $name") {
                 val point = JacobianPoint.fromHex(test_x, test_y, test_z)
@@ -376,10 +380,10 @@ internal class Secp256k1CurveTest {
         // and the new random exponent together (mod N)
         val basePoint = bigAffineToJacobian(Secp256k1Curve.g)
         val exponent = ModNScalar.setInt(1u)
-        val random = SecureRandom()
-        for (i in 0..1023) {
+        val secureRandom = SecureRandom()
+        repeat(1024) {
             val data = ByteArray(32)
-            random.nextBytes(data)
+            secureRandom.nextBytes(data)
             val k = ModNScalar.setByteSlice(data)
             val point = Secp256k1Curve.scalarMultNonConst(k, basePoint).toAffine()
             val want = Secp256k1Curve.scalarBaseMultNonConst(exponent * k).toAffine()
@@ -395,50 +399,50 @@ internal class Secp256k1CurveTest {
                 "b776e53fb55f6b006a270d42d64ec2b1",
                 "d6cc32c857f1174b604eefc544f0c7f7",
                 -1,
-                -1
+                -1,
             ),
             Tuple5(
                 "6ca00a8f10632170accc1b3baf2a118fa5725f41473f8959f34b8f860c47d88d",
                 "07b21976c1795723c1bfbfa511e95b84",
                 "d8d2d5f9d20fc64fd2cf9bda09a5bf90",
                 1,
-                -1
+                -1,
             ),
             Tuple5(
                 "b2eda8ab31b259032d39cbc2a234af17fcee89c863a8917b2740b67568166289",
                 "507d930fecda7414fc4a523b95ef3c8c",
                 "f65ffb179df189675338c6185cb839be",
                 -1,
-                -1
+                -1,
             ),
             Tuple5(
                 "f6f00e44f179936f2befc7442721b0633f6bafdf7161c167ffc6f7751980e3a0",
                 "08d0264f10bcdcd97da3faa38f85308d",
                 "65fed1506eb6605a899a54e155665f79",
                 -1,
-                -1
+                -1,
             ),
             Tuple5(
                 "8679085ab081dc92cdd23091ce3ee998f6b320e419c3475fae6b5b7d3081996e",
                 "89fbf24fbaa5c3c137b4f1cedc51d975",
                 "d38aa615bd6754d6f4d51ccdaf529fea",
                 -1,
-                -1
+                -1,
             ),
             Tuple5(
                 "6b1247bb7931dfcae5b5603c8b5ae22ce94d670138c51872225beae6bba8cdb3",
                 "8acc2a521b21b17cfb002c83be62f55d",
                 "35f0eff4d7430950ecb2d94193dedc79",
                 -1,
-                -1
+                -1,
             ),
             Tuple5(
                 "a2e8ba2e8ba2e8ba2e8ba2e8ba2e8ba219b51835b55cc30ebfe2f6599bc56f58",
                 "45c53aa1bb56fcd68c011e2dad6758e4",
                 "a2e79d200f27f2360fba57619936159b",
                 -1,
-                -1
-            )
+                -1,
+            ),
         ).map { (test_k: String, test_k1: String, test_k2: String, test_s1: Int, test_s2: Int) ->
             DynamicTest.dynamicTest("Test: $test_k, $test_k1, $test_k2") {
                 val k = BigInt.fromHex(test_k)
@@ -464,7 +468,7 @@ internal class Secp256k1CurveTest {
     @Test
     fun splitKRandom() {
         val random = SecureRandom()
-        for (i in 0..1023) {
+        repeat(1024) {
             val bytesK = ByteArray(32)
             random.nextBytes(bytesK)
             val k = BigInt.fromBytes(bytesK)
@@ -489,43 +493,43 @@ internal class Secp256k1CurveTest {
                 "00",
                 false,
                 "",
-                ""
+                "",
             ),
             Tuple5(
                 "x = 1",
                 "01",
                 true,
                 "bde70df51939b94c9c24979fa7dd04ebd9b3572da7802290438af2a681895441",
-                "4218f20ae6c646b363db68605822fb14264ca8d2587fdd6fbc750d587e76a7ee"
+                "4218f20ae6c646b363db68605822fb14264ca8d2587fdd6fbc750d587e76a7ee",
             ),
             Tuple5(
                 "x = secp256k1 prime (aka 0) -- not a point on the curve",
                 "fffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f",
                 false,
                 "",
-                ""
+                "",
             ),
             Tuple5(
                 "x = secp256k1 prime - 1 -- not a point on the curve",
                 "fffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2e",
                 false,
                 "",
-                ""
+                "",
             ),
             Tuple5(
                 "x = secp256k1 group order",
                 "fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141",
                 true,
                 "670999be34f51e8894b9c14211c28801d9a70fde24b71d3753854b35d07c9a11",
-                "98f66641cb0ae1776b463ebdee3d77fe2658f021db48e2c8ac7ab4c92f83621e"
+                "98f66641cb0ae1776b463ebdee3d77fe2658f021db48e2c8ac7ab4c92f83621e",
             ),
             Tuple5(
                 "x = secp256k1 group order - 1 -- not a point on the curve",
                 "fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364140",
                 false,
                 "",
-                ""
-            )
+                "",
+            ),
         ).map { (name: String, x: String, valid: Boolean, wantOddY: String, wantEvenY: String) ->
             DynamicTest.dynamicTest("Test: $name") {
                 // Decompress the test odd y coordinate for the given test x coordinate
@@ -550,7 +554,7 @@ internal class Secp256k1CurveTest {
     @Test
     fun decompressYRandom() {
         val random = SecureRandom()
-        for (i in 0..1023) {
+        repeat(1024) {
             val buf = ByteArray(32)
             random.nextBytes(buf)
             val x = FieldVal.setBytes(buf)
@@ -609,7 +613,7 @@ internal class Secp256k1CurveTest {
     }
 
     private fun randIntAndModNScalar(): Tuple2<BigInteger, ModNScalar> {
-        val r = Random()
+        val r = SecureRandom()
         val buf = ByteArray(32)
         r.nextBytes(buf)
         val big = BigInt.fromBytes(buf)
@@ -620,7 +624,7 @@ internal class Secp256k1CurveTest {
         return JacobianPoint(
             FieldVal.setByteSlice(BigInt.toBytes(curvePoint.x)),
             FieldVal.setByteSlice(BigInt.toBytes(curvePoint.y)),
-            FieldVal.One
+            FieldVal.One,
         )
     }
 }

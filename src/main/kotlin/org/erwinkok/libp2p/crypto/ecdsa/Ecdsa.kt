@@ -83,10 +83,10 @@ object Ecdsa {
         return Asn1EcdsaPublicKey.unmarshal(data)
     }
 
-    fun sign(priv: EcdsaPrivateKey, hash: ByteArray, random: SecureRandom): Result<EcdsaSignature> {
-        random.nextInt()
+    fun sign(priv: EcdsaPrivateKey, hash: ByteArray, secureRandom: SecureRandom): Result<EcdsaSignature> {
+        secureRandom.nextInt()
         val entropy = ByteArray(32)
-        random.nextBytes(entropy)
+        secureRandom.nextBytes(entropy)
 
         // Initialize an SHA-512 hash context; digest ...
         val curve = priv.ecdsaPublicKey.curve
@@ -101,7 +101,7 @@ object Ecdsa {
             var kInv: BigInteger? = null
             var foundR = false
             while (!foundR) {
-                val k = randFieldElement(curve, random)
+                val k = randFieldElement(curve, secureRandom)
                 kInv = fermatInverse(k, n)
                 val (x) = curve.scalarBaseMult(BigInt.toBytes(k))
                 r = x.mod(n)
@@ -177,9 +177,9 @@ object Ecdsa {
 
     // randFieldElement returns a random element of the field underlying the given
     // curve using the procedure given in [NSA] A.2.1.
-    private fun randFieldElement(curve: Curve, random: SecureRandom): BigInteger {
+    private fun randFieldElement(curve: Curve, secureRandom: SecureRandom): BigInteger {
         val b = ByteArray(curve.bitSize / 8 + 8)
-        random.nextBytes(b)
+        secureRandom.nextBytes(b)
         var k = BigInt.fromBytes(b)
         val n = curve.n.subtract(BigInteger.ONE)
         k = k.mod(n)

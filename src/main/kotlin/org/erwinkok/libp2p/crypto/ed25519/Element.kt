@@ -14,53 +14,40 @@ import kotlin.experimental.or
 // are allowed to alias.
 //
 // The zero value is a valid zero element.
-class Element {
+class Element(
+    private val _l0: Long,
+    private val _l1: Long,
+    private val _l2: Long,
+    private val _l3: Long,
+    private val _l4: Long,
+) {
     // An element t represents the integer
     //     t.l0 + t.l1*2^51 + t.l2*2^102 + t.l3*2^153 + t.l4*2^204
     //
     // Between operations, all limbs are expected to be lower than 2^52.
-    private val _l0: Long
-    private val _l1: Long
-    private val _l2: Long
-    private val _l3: Long
-    private val _l4: Long
-
-    constructor(l0: Long, l1: Long, l2: Long, l3: Long, l4: Long) {
-        this._l0 = l0
-        this._l1 = l1
-        this._l2 = l2
-        this._l3 = l3
-        this._l4 = l4
-    }
-
-    constructor(other: Element) {
-        this._l0 = other._l0
-        this._l1 = other._l1
-        this._l2 = other._l2
-        this._l3 = other._l3
-        this._l4 = other._l4
-    }
+    constructor(other: Element) : this(other._l0, other._l1, other._l2, other._l3, other._l4)
 
     // SetBytes sets v to x, which must be a 32-byte little-endian encoding.
     //
     // Consistent with RFC 7748, the most significant bit (the high bit of the
     // last byte) is ignored, and non-canonical values (2^255-19 through 2^255-1)
     // are accepted. Note that this is laxer than specified by RFC 8032.
-    constructor(x: ByteArray) {
+    constructor(x: ByteArray) : this(
+        // Bits 0:51 (bytes 0:8, bits 0:64, shift 0, mask 51).
+        uint64(x, 0) and MASK_LOW_51_BITS,
+        // Bits 51:102 (bytes 6:14, bits 48:112, shift 3, mask 51).
+        (uint64(x, 6) ushr 3) and MASK_LOW_51_BITS,
+        // Bits 102:153 (bytes 12:20, bits 96:160, shift 6, mask 51).
+        (uint64(x, 12) ushr 6) and MASK_LOW_51_BITS,
+        // Bits 153:204 (bytes 19:27, bits 152:216, shift 1, mask 51).
+        (uint64(x, 19) ushr 1) and MASK_LOW_51_BITS,
+        // Bits 204:251 (bytes 24:32, bits 192:256, shift 12, mask 51).
+        // Note: not bytes 25:33, shift 4, to avoid overread.
+        (uint64(x, 24) ushr 12) and MASK_LOW_51_BITS,
+    ) {
         if (x.size != 32) {
             throw NumberFormatException("edwards25519: invalid field element input size")
         }
-        // Bits 0:51 (bytes 0:8, bits 0:64, shift 0, mask 51).
-        this._l0 = uint64(x, 0) and MASK_LOW_51_BITS
-        // Bits 51:102 (bytes 6:14, bits 48:112, shift 3, mask 51).
-        this._l1 = (uint64(x, 6) ushr 3) and MASK_LOW_51_BITS
-        // Bits 102:153 (bytes 12:20, bits 96:160, shift 6, mask 51).
-        this._l2 = (uint64(x, 12) ushr 6) and MASK_LOW_51_BITS
-        // Bits 153:204 (bytes 19:27, bits 152:216, shift 1, mask 51).
-        this._l3 = (uint64(x, 19) ushr 1) and MASK_LOW_51_BITS
-        // Bits 204:251 (bytes 24:32, bits 192:256, shift 12, mask 51).
-        // Note: not bytes 25:33, shift 4, to avoid overread.
-        this._l4 = (uint64(x, 24) ushr 12) and MASK_LOW_51_BITS
     }
 
     // IsNegative returns 1 if v is negative, and 0 otherwise.
@@ -687,7 +674,7 @@ class Element {
                 (l1 and MASK_LOW_51_BITS) + c0,
                 (l2 and MASK_LOW_51_BITS) + c1,
                 (l3 and MASK_LOW_51_BITS) + c2,
-                (l4 and MASK_LOW_51_BITS) + c3
+                (l4 and MASK_LOW_51_BITS) + c3,
             )
         }
 
@@ -714,7 +701,7 @@ class Element {
             "00010202030303030404040404040404050505050505050505050505050505050606060606060606060606060606060606060606060606060606060606060606" +
                 "07070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707" +
                 "08080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808" +
-                "08080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808"
+                "08080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808080808",
         )
     }
 }
